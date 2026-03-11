@@ -1,4 +1,3 @@
-// Include custom about page
 .course-info.about {
     &.container {
         padding-top: 50px;
@@ -13,113 +12,131 @@
         background: none;
         .intro-inner-wrapper {
             background: none;
-            padding: 0 0 60px;
-            @include media-breakpoint-up(md) {
-                padding: 0 0 20px;
-            }
+            padding: 0 0 40px;
             @include media-breakpoint-up(lg) {
                 padding: 36px 0 60px;
             }
         }
     }
     .intro-inner-wrapper .profile-top {
-        &:after {
-            display: block;
-            content: "";
-            clear: both;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        @include media-breakpoint-up(md) {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
         }
+
         .info-profile {
-            overflow: hidden;
-            padding: 0 0 10px;
+            flex: 1;
+            min-width: 0;
+            order: 2;
             @include media-breakpoint-up(md) {
-                padding: 0 0 70px;
+                order: 1;
             }
             h1 {
-                font-size: 24px;
+                font-size: 28px;
                 font-weight: 800;
-                margin: 0 0 8px;
-                line-height: 30px;
-                color: #111827;
+                margin: 0 0 10px;
+                line-height: 1.28;
+                color: #101114;
                 text-align: left;
-            }
-            .org {
-                display: block;
-                color: #515661;
-                font-size: 16px;
-                line-height: 22px;
+                @include media-breakpoint-up(md) {
+                    font-size: 36px;
+                }
+                @include media-breakpoint-up(lg) {
+                    font-size: 42px;
+                    line-height: 54px;
+                }
             }
         }
         .media {
-            margin: 0 auto 20px;
+            margin: 0;
             padding: 0;
             display: block;
-            max-width: 400px;
             width: 100%;
+            order: 1;
             @include media-breakpoint-up(md) {
-                float: right;
-                width: 32%;
-                margin: 0 0 0 80px;
+                width: 512px;
+                min-width: 360px;
+                flex-shrink: 0;
+                order: 2;
             }
             img {
                 display: block;
                 width: 100%;
-                height: auto;
+                height: 220px;
+                object-fit: cover;
+                border-radius: 12px;
                 position: relative;
                 z-index: 1;
-                border-radius: 8px;
-                height: 180px;
-                object-fit: cover;
+                @include media-breakpoint-up(md) {
+                    height: 318px;
+                }
             }
             .hero {
                 position: relative;
-                overflow: visible;
+                overflow: hidden;
                 border: none;
+                border-radius: 12px;
                 &:after {
-                    position: absolute;
-                    left: 1px;
-                    top: 1px;
-                    width: calc(100% - 2px);
-                    height: calc(100% - 2px);
-                    content: "";
-                    border-radius: 8px;
-                    border: 1px solid $primary-light;
+                    display: none;
                 }
-                .play-intro{
+                .play-intro {
                     z-index: 10;
                 }
             }
         }
     }
-    .main-cta {
-        @include media-breakpoint-up(md) {
-            margin: -50px 0 0;
-        }
-        span {
-          &.register {
-            &.disabled {
-              display: inline-block;
-              vertical-align: top;
-              padding: 7px 14px;
-              color: #374151;
-              border-radius: 6px;
-              background: #fff;
-              font-size: 16px;
-              line-height: 24px;
-              font-weight: 500;
-              text-decoration: none !important;
-              border: 1px solid #D1D5DB;
-              margin-right: 20px;
-              @include media-breakpoint-up(md) {
-                  padding: 12px 24px;
-              }
 
-              &:hover {
-                opacity: 1;
-              }
+    .course-meta {
+        margin: 0 0 20px;
+
+        .course-meta-item {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+            @include media-breakpoint-up(md) {
+                font-size: 18px;
             }
-          }
+            @include media-breakpoint-up(lg) {
+                font-size: 20px;
+            }
         }
+        .course-meta-label {
+            color: $primary;
+            font-weight: 400;
+        }
+        .course-meta-value {
+            color: #101114;
+            font-weight: 400;
+        }
+    }
 
+    .main-cta {
+        span {
+            &.register {
+                &.disabled {
+                    display: inline-block;
+                    vertical-align: top;
+                    padding: 12px 24px;
+                    color: #374151;
+                    border-radius: 100px;
+                    background: #fff;
+                    font-size: 16px;
+                    line-height: 20px;
+                    font-weight: 700;
+                    text-decoration: none !important;
+                    border: 1px solid #D1D5DB;
+                    margin-right: 15px;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
         a {
             display: inline-block;
             text-decoration: none !important;
@@ -127,34 +144,32 @@
         a.register, a strong, >span.register, a.add-to-cart {
             display: inline-block;
             vertical-align: top;
-            padding: 8px 15px;
+            padding: 15px 24px;
             color: #fff;
-            border-radius: 6px;
+            border-radius: 100px;
             background: $primary;
             font-size: 16px;
-            line-height: 24px;
-            font-weight: 500;
+            line-height: 20px;
+            font-weight: 700;
             text-decoration: none !important;
-            @include media-breakpoint-up(md) {
-                padding: 13px 25px;
-            }
             &:hover {
                 text-decoration: none;
-                opacity: .8;
+                opacity: .85;
             }
         }
         span.closed {
             background: $primary-light;
-            border-radius: 6px;
+            border-radius: 100px;
             color: #9CA3AF;
             font-size: 16px;
-            line-height: 24px;
-            padding: 16px;
-            font-weight: 500;
+            line-height: 20px;
+            padding: 15px 24px;
+            font-weight: 700;
             display: inline-block;
             vertical-align: top;
         }
     }
+
     .about-content {
         display: flex;
         flex-flow: column-reverse;
@@ -371,15 +386,13 @@
         }
     }
 }
+
 body.vai-dark-theme {
     .course-info.about {
         .intro-inner-wrapper .profile-top {
             .info-profile {
                 h1 {
                     color: $text-color-d;
-                }
-                .org {
-                    color: $text-color-primary;
                 }
             }
             .media {
@@ -388,6 +401,14 @@ body.vai-dark-theme {
                         border-color: $border-color-d;
                     }
                 }
+            }
+        }
+        .course-meta {
+            .course-meta-label {
+                color: $primary-d;
+            }
+            .course-meta-value {
+                color: $text-color-d;
             }
         }
         .main-cta {

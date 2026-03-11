@@ -57,10 +57,62 @@ from openedx.core.lib.courses import course_image_url
 <section class="course-info about container" id="main">
 
   <%block name="course_about_header">
-  <!-- Course profile header is updated inclusive of course heading and course image. -->
   <header class="course-profile">
     <div class="intro-inner-wrapper">
       <div class="profile-top">
+        <div class="info-profile">
+          <h1>${course.display_name_with_default}</h1>
+          <div class="course-meta">
+            <p class="course-meta-item">
+              <span class="course-meta-label">${_("Course Number:")}</span>
+              <span class="course-meta-value">${course.display_number_with_default}</span>
+            </p>
+            <%
+                header_start_date = course.advertised_start or (course.start if not course.start_date_is_still_default else None)
+            %>
+            % if header_start_date:
+            <p class="course-meta-item">
+              <span class="course-meta-label">${_("Classes Start Date:")}</span>
+              % if isinstance(header_start_date, str):
+                <span class="course-meta-value">${header_start_date}</span>
+              % else:
+                <span class="course-meta-value localized_datetime" data-format="shortDate" data-datetime="${header_start_date.strftime('%Y-%m-%dT%H:%M:%S%z')}" data-language="${LANGUAGE_CODE}"></span>
+              % endif
+            </p>
+            % endif
+          </div>
+          <div class="main-cta">
+            %if user.is_authenticated and registered:
+            <span class="register disabled">${_("Already Enrolled")}</span>
+              %if show_courseware_link:
+                <a href="${course_target}"><strong>${_("View Course")}</strong></a>
+              %endif
+            % elif is_course_full:
+              <span class="register disabled">${_("Course is full")}</span>
+            % elif invitation_only and not can_enroll:
+              <span class="register disabled">${_("Enrollment in this course is by invitation only")}</span>
+            % elif not is_shib_course and not can_enroll:
+              <span class="register closed disabled"><i class="fa fa-lock" aria-hidden="true"></i> ${_("Enrollment is Closed")}</span>
+            %elif allow_anonymous:
+              %if show_courseware_link:
+                <a href="${course_target}"><strong>${_("View Course")}</strong></a>
+              %endif
+            %else:
+              <%
+                if ecommerce_checkout:
+                  reg_href = ecommerce_checkout_link
+                else:
+                  reg_href="#"
+                if single_paid_mode:
+                  href_class = "add-to-cart"
+                else:
+                  href_class = "register"
+              %>
+              <a href="${reg_href}" class="${href_class}">${_("Enroll Now")}</a>
+              <div id="register_error"></div>
+            %endif
+          </div>
+        </div>
         % if get_course_about_section(request, course, "video"):
         <a href="#video-modal" class="media" rel="leanModal">
           <div class="hero">
@@ -71,64 +123,12 @@ from openedx.core.lib.courses import course_image_url
         %else:
         <div class="media">
           <div class="hero">
-            <!-- VAI theme: Add fallback image in case of no course-image using onerror -->
             <img src="${course_image_urls['large']}" onerror="this.src='/theming/asset/images/no_course_image.png';" alt="" aria-hidden="true" />
           </div>
         </div>
         % endif
-        <div class="info-profile">
-          <h1>
-            ${course.display_name_with_default}
-          </h1>
-          <span class="org">${course.display_org_with_default}</span>
-        </div>
       </div>
-      <div class="main-cta">
-        %if user.is_authenticated and registered:
-        <span class="register disabled">${_("Already Enrolled")}</span>
-          %if show_courseware_link:
-            <a href="${course_target}">
-          %endif
-          %if show_courseware_link:
-            <strong>${_("View Course")}</strong>
-            </a>
-          %endif
-
-        % elif is_course_full:
-          <span class="register disabled">
-            ${_("Course is full")}
-          </span>
-        % elif invitation_only and not can_enroll:
-          <span class="register disabled">${_("Enrollment in this course is by invitation only")}</span>
-        ## Shib courses need the enrollment button to be displayed even when can_enroll is False,
-        ## because AnonymousUsers cause can_enroll for shib courses to be False, but we need them to be able to click
-        ## so that they can register and become a real user that can enroll.
-        % elif not is_shib_course and not can_enroll:
-        <span class="register closed disabled"><i class="fa fa-lock" aria-hidden="true"></i> ${_("Enrollment is Closed")}</span>
-        %elif allow_anonymous:
-          %if show_courseware_link:
-            <a href="${course_target}">
-            <strong>${_("View Course")}</strong>
-            </a>
-          %endif
-        %else:
-          <%
-            if ecommerce_checkout:
-              reg_href = ecommerce_checkout_link
-            else:
-              reg_href="#"
-            if single_paid_mode:
-              href_class = "add-to-cart"
-            else:
-              href_class = "register"
-          %>
-          <a href="${reg_href}" class="${href_class}">
-            ${_("Enroll Now")}
-          </a>
-          <div id="register_error"></div>
-        %endif
-        </div>
-      </div>
+    </div>
   </header>
   </%block>
 
