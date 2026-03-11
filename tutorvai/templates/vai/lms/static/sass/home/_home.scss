@@ -17,14 +17,36 @@ section.home {
         .nav-item {
             letter-spacing: normal;
             margin: 0 7px;
-            padding: 12px 0;
+            padding: 10px 0;
             .btn {
                 line-height: 20px;
                 padding: 9px 17px;
                 font-size: 14px;
-                border-radius: 6px;
-                font-weight: 500;
+                border-radius: 100px;
+                font-weight: 600;
                 display: block;
+                text-align: center;
+                text-decoration: none;
+                transition: background-color 0.2s, border-color 0.2s;
+                &.register-btn {
+                    background: $primary;
+                    color: #fff;
+                    border: 1px solid $primary;
+                    &:hover {
+                        background: #2b0157;
+                        border-color: #2b0157;
+                        color: #fff;
+                    }
+                }
+                &.sign-in-btn {
+                    background: #fff;
+                    color: $primary;
+                    border: 1px solid $primary;
+                    &:hover {
+                        background: $primary-light;
+                        color: $primary;
+                    }
+                }
             }
         }
     }
@@ -498,15 +520,18 @@ body.vai-dark-theme {
         .btn-holder {
             .nav-item {
                 .btn {
-                    &.sign-in-btn {
+                    &.register-btn {
                         background: $primary-d;
                         color: $btn-color-d;
                         border-color: $primary-d;
                     }
-                    &.register-btn {
+                    &.sign-in-btn {
+                        background: transparent;
                         color: $text-color-d;
                         border-color: $text-color-d;
-                        background: none;
+                        &:hover {
+                            background: $primary-light-d;
+                        }
                     }
                 }
             }

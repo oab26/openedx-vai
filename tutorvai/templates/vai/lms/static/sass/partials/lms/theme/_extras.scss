@@ -4,7 +4,7 @@ $content_padding_top: 24px;
 $content-padding-bottom: 10px;
 $header-height: 75px;
 $footer-height: 125.5px;
-body, h1, h2, h3, h4, h5, h6, p, label, button {
+*, *::before, *::after {
   font-family: $font-family-title !important;
 }
 html {
