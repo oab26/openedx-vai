@@ -198,6 +198,292 @@ section.home {
         }
     }
 }
+// Recommended for You carousel section
+.recommended-for-you {
+    padding: 50px 0 60px;
+
+    .rfy-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin: 0 0 28px;
+        gap: 20px;
+        flex-wrap: wrap;
+
+        .rfy-text {
+            max-width: 761px;
+            h2 {
+                font-family: $font-family-title;
+                font-size: 28px;
+                font-weight: 800;
+                line-height: 1.3;
+                color: #101114;
+                margin: 0 0 10px;
+                @include media-breakpoint-up(md) {
+                    font-size: 42px;
+                    line-height: 70px;
+                    margin: 0;
+                }
+            }
+            p {
+                font-family: $font-family-title;
+                font-size: 16px;
+                line-height: 1.5;
+                color: #101114;
+                margin: 0;
+                @include media-breakpoint-up(md) {
+                    font-size: 20px;
+                }
+            }
+        }
+
+        .rfy-arrows {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .rfy-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border: 1px solid $primary;
+            border-radius: 200px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: $primary;
+            padding: 0;
+            @include media-breakpoint-up(md) {
+                width: 108px;
+            }
+            svg {
+                width: 24px;
+                height: 24px;
+                flex-shrink: 0;
+            }
+            &:hover {
+                background: $primary;
+                color: #fff;
+                svg { stroke: #fff; }
+            }
+        }
+    }
+
+    .rfy-carousel-wrapper {
+        overflow: hidden;
+    }
+
+    .rfy-carousel {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        padding: 10px 0 20px;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .rfy-card {
+        flex: 0 0 240px;
+        height: 340px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.35s ease;
+        text-decoration: none !important;
+        display: block;
+        background: #fff;
+        border: 6px solid transparent;
+        @include media-breakpoint-up(sm) {
+            flex: 0 0 260px;
+            height: 370px;
+        }
+        @include media-breakpoint-up(md) {
+            flex: 0 0 282px;
+            height: 399px;
+        }
+    }
+
+    .rfy-card-image {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    .rfy-card-gradient {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 50%;
+        background: linear-gradient(to bottom, rgba(16, 17, 20, 0), #101114);
+        transition: height 0.35s ease;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .rfy-card-content {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
+        transition: bottom 0.35s ease;
+        z-index: 2;
+    }
+
+    .rfy-card-tag {
+        display: inline-block !important;
+        background: #8fe389;
+        color: #101114 !important;
+        font-family: $font-family-title;
+        font-size: 14px;
+        line-height: 24px;
+        padding: 2px 5px;
+        width: fit-content;
+        white-space: nowrap;
+    }
+
+    .rfy-card-title {
+        color: #fff !important;
+        font-family: $font-family-title;
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.3;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 200px;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        border: none !important;
+    }
+
+    .rfy-card-buttons {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease 0.05s;
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    .rfy-btn-primary {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 50px;
+        max-height: 50px;
+        box-sizing: border-box;
+        background: #fff !important;
+        color: $primary !important;
+        font-family: $font-family-title;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1 !important;
+        border-radius: 200px;
+        padding: 10px 22px;
+        white-space: nowrap;
+        text-decoration: none !important;
+        svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            stroke: $primary;
+        }
+    }
+
+    .rfy-btn-outline {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        max-height: 50px;
+        box-sizing: border-box;
+        border: 1px solid #fff;
+        background: transparent !important;
+        color: #fff !important;
+        font-family: $font-family-title;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1 !important;
+        border-radius: 200px;
+        padding: 10px 22px;
+        white-space: nowrap;
+        text-decoration: none !important;
+    }
+
+    .rfy-card:hover {
+        border-color: $primary;
+        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25);
+        .rfy-card-gradient {
+            height: 100%;
+        }
+        .rfy-card-content {
+            bottom: 155px;
+        }
+        .rfy-card-buttons {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    }
+
+    .rfy-cta-wrapper {
+        text-align: center;
+        padding: 30px 0 0;
+    }
+
+    .rfy-browse-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 22px;
+        height: 50px;
+        border: 1px solid $primary;
+        border-radius: 200px;
+        background: #fff;
+        color: $primary !important;
+        font-family: $font-family-title;
+        font-size: 16px;
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+        svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        &:hover {
+            background: $primary;
+            color: #fff !important;
+            svg { stroke: #fff; }
+        }
+    }
+}
+
 body.vai-dark-theme {
     h1 {
         color: $text-color-d;
@@ -270,6 +556,46 @@ body.vai-dark-theme {
                         }
                     }
                 }
+            }
+        }
+    }
+    .recommended-for-you {
+        .rfy-header {
+            .rfy-text {
+                h2 { color: $text-color-d; }
+                p { color: $text-color-primary; }
+            }
+            .rfy-arrow {
+                border-color: $primary-d;
+                color: $primary-d;
+                svg { stroke: $primary-d; }
+                &:hover {
+                    background: $primary-d;
+                    color: $btn-color-d;
+                    svg { stroke: $btn-color-d; }
+                }
+            }
+        }
+        .rfy-card:hover {
+            border-color: $primary-d;
+        }
+        .rfy-btn-primary {
+            background: $text-color-d;
+            color: $primary-d;
+        }
+        .rfy-btn-outline {
+            border-color: $text-color-d;
+            color: $text-color-d;
+        }
+        .rfy-browse-btn {
+            border-color: $primary-d;
+            color: $primary-d !important;
+            background: transparent;
+            svg { stroke: $primary-d; }
+            &:hover {
+                background: $primary-d;
+                color: $btn-color-d !important;
+                svg { stroke: $btn-color-d; }
             }
         }
     }
