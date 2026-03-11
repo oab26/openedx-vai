@@ -1,0 +1,2 @@
+recursive-include tutorvai/templates *
+recursive-include tutorvai/patches *

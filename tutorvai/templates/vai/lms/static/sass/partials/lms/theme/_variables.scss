@@ -1,0 +1,43 @@
+$primary: {{ VAI_PRIMARY_COLOR }};
+$primary-light: #F5ECFF;
+
+// Theme fonts — Garet loaded via @font-face in _fonts.scss
+$font-family-title: 'Garet', 'Inter', sans-serif;
+$serif: 'Garet';
+$f-sans-serif: 'Garet', 'Open Sans','Helvetica Neue', Helvetica, Arial, sans-serif;
+
+// Initialize the Open edX Bootstrap theme
+@import 'edx-bootstrap/sass/open-edx/theme';
+
+// VAI design tokens
+$vai-btn-radius: 200px;
+$vai-card-radius: 16px;
+
+$dark: #111827;
+$light-dark: #374151;
+$big-screen: 1200px;
+
+// Dark-theme variables
+$primary-d: #C89EF2;
+$primary-light-d: #292A2C;
+$gray-light: #E5E7EB;
+$gray-lighter: #c8c8c8;
+$light-dark-d: #374151;
+$text-color-d: #F8F8F8;
+$text-color-primary: #DDDFE2;
+$border-color-d: #777792;
+$light-overlay-d: #36383B;
+$danger-d: #FFA07A;
+$success-d: #54CF5E;
+$btn-color-d: #2D0B4E;
+$body-bg-d: #0D0D0E;
+
+$instructor-input-border-color: $gray-lighter;
+$light-theme-switch-bg-color: #490B8A;
+$dark-theme-switch-bg-color: #717D8A;
+
+$warning-400: #ffe340;
+$warning-700: #9c4607;
+$warning-accent-700: #fffcf5;
+
+$page-color-transition: transparent .2s ease, color .2s ease;

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tutor-vai"
+dynamic = ["version"]
+description = "VAI (Veterinary Academy International) theme for Open edX"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "AGPLv3"}
+dependencies = [
+    "tutor>=18.0.0,<21.0.0",
+    "tutor-mfe>=18.0.0,<21.0.0",
+]
+
+[project.entry-points."tutor.plugin.v1"]
+vai = "tutorvai.plugin"
+
+[tool.setuptools.dynamic]
+version = {attr = "tutorvai.__about__.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tutorvai*"]
+
+[tool.setuptools.package-data]
+tutorvai = ["templates/**/*", "patches/*"]
