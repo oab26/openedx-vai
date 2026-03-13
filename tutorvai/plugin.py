@@ -701,6 +701,7 @@ if (process.env.APP_ID === 'account') {
       "html .jump-nav a.vai-active { background: #F5ECFF !important; font-weight: 700 !important; }",
       "html h2.section-heading { font-size: 22px !important; font-weight: 700 !important; color: black !important; }",
       "html h2.section-heading + p { font-size: 12px !important; color: black !important; }",
+      "html .account-section .pgn-transition-replace-group { max-width: 850px !important; }",
       "html .account-section .form-group { border: 1px solid #E7E7E7 !important; border-radius: 12px !important; padding: 16px !important; margin-bottom: 12px !important; }",
       "html .account-section .form-group .d-flex { align-items: center !important; }",
       "html .account-section .form-group h6 { font-size: 14px !important; font-weight: 400 !important; color: black !important; margin: 0 !important; flex: 1 !important; line-height: 1.55 !important; }",
@@ -718,7 +719,14 @@ if (process.env.APP_ID === 'account') {
       "html .btn.btn-outline-danger { color: #D80027 !important; border: 1px solid #D80027 !important; border-radius: 100px !important; height: 35px !important; padding: 0 24px !important; font-size: 14px !important; font-weight: 700 !important; background: transparent !important; }",
       "html .btn.btn-outline-danger:hover { background: #FFF0F0 !important; }",
       "html .account-section a.pgn__hyperlink { color: #490B8A !important; }",
-      "html .account-section a.pgn__hyperlink:hover { color: #2B0157 !important; }"
+      "html .account-section a.pgn__hyperlink:hover { color: #2B0157 !important; }",
+      "html .btn.btn-primary { background: #490B8A !important; border-color: #490B8A !important; color: white !important; border-radius: 100px !important; height: 35px !important; padding: 0 24px !important; font-size: 14px !important; font-weight: 700 !important; }",
+      "html .btn.btn-primary:hover { background: #2B0157 !important; border-color: #2B0157 !important; }",
+      "html .btn.btn-outline-primary { background: white !important; border: 1px solid #490B8A !important; color: #101114 !important; border-radius: 200px !important; height: 35px !important; padding: 0 22px !important; font-size: 14px !important; font-weight: 400 !important; }",
+      "html .btn.btn-outline-primary:hover { background: #F5ECFF !important; border-color: #490B8A !important; color: #101114 !important; }",
+      "html input:focus, html select:focus, html textarea:focus { border-color: #490B8A !important; box-shadow: 0 0 0 1px #490B8A !important; outline: none !important; }",
+      "html .form-control:focus { border-color: #490B8A !important; box-shadow: 0 0 0 1px #490B8A !important; }",
+      "html .pgn__form-group { max-width: 850px !important; }"
     ].join('\\n');
     document.head.appendChild(style);
 
@@ -756,9 +764,93 @@ if (process.env.APP_ID === 'account') {
     }
     window.addEventListener('hashchange', updateActiveNav);
 
+    // Scroll-based active nav using IntersectionObserver
+    function setupScrollSpy() {
+      var jumpLinks = document.querySelectorAll('.jump-nav a');
+      if (!jumpLinks.length) return;
+      var sectionIds = [];
+      jumpLinks.forEach(function(link) {
+        var href = link.getAttribute('href') || '';
+        var hash = href.replace('/account/', '').replace('#', '');
+        if (hash) sectionIds.push(hash);
+      });
+      var sections = [];
+      sectionIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) sections.push({ id: id, el: el });
+      });
+      if (!sections.length) return;
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.id;
+            jumpLinks.forEach(function(link) {
+              var linkHash = (link.getAttribute('href') || '').replace('/account/', '').replace('#', '');
+              if (linkHash === id) link.classList.add('vai-active');
+              else link.classList.remove('vai-active');
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+      sections.forEach(function(s) { io.observe(s.el); });
+    }
+    setTimeout(setupScrollSpy, 2000);
+
     var observer = new MutationObserver(function() { applyVaiAccount(); });
     function startObserving() {
       if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiAccount(); }
+    }
+    if (document.body) startObserving();
+    else document.addEventListener('DOMContentLoaded', startObserving);
+  })();
+}
+
+if (process.env.APP_ID === 'learning') {
+  (function() {
+    var vaiDarkLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IiM0OTBCOEEiLz4KPHBhdGggZD0iTTYxLjgwNDcgMzEuMTIyNkg1NS45MTQ5TDUzLjcyNDggMjUuOTA0OUw0Mi43MzUxIDI1Ljg4NjFMNDAuNjM0IDMxLjEyMjZIMzQuNzg2M0wzNC42OTQyIDMwLjk0NjlMNDQuOTk1NSA1LjE4Nzg4TDQ1LjI4MTIgNS4wNDUxN0M0Ny4yMTA2IDUuMjMzMzYgNDkuNTYgNC44MTMwNiA1MS40Mzc5IDUuMDQ1MTdDNTEuNTMxNiA1LjA1NjE0IDUxLjYyODMgNS4wNDA0NiA1MS42OTA4IDUuMTM0NTZMNjEuODA0NyAzMS4xMjI2Wk01MS45MDMxIDIwLjgzMTVMNDguNDAxNyAxMS4wNTQ4TDQ0LjU2MTUgMjAuODMxNUg1MS45MDMxWiIgZmlsbD0iIzQ5MEI4QSIvPgo8cGF0aCBkPSJNNjkuOTk5OSAzMS4wMzc5QzY4Ljc5MTcgMzEuMDU5OSA2Ny41NzcyIDMxLjAwOTcgNjYuMzY4OSAzMS4wMzQ4QzY2LjAxOTMgMzEuMDQyNiA2NC4zOTczIDMxLjI4MjYgNjQuMjMxOSAzMS4wMzk1QzY0LjE4MDQgMzAuOTc4MyA2NC4yODE4IDMwLjkzMTMgNjQuMjgxOCAzMC45MDkzVjUuMDUxNDRINjkuODczNUw3MC4wMDE1IDUuMTgwMDRWMzEuMDM3OUg2OS45OTk5WiIgZmlsbD0iIzQ5MEI4QSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSIjNDkwQjhBIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==';
+    var style = document.createElement('style');
+    style.textContent = 'html footer.footer { display: none !important; }';
+    document.head.appendChild(style);
+
+    function applyVaiLogo() {
+      var imgs = document.querySelectorAll('.learning-header a[href*="/dashboard"] img, header .logo img, header a[href*="/dashboard"] img, header a[href="/"] img');
+      imgs.forEach(function(logo) {
+        if (logo.src.indexOf('data:image/svg') === -1) {
+          logo.src = vaiDarkLogo;
+          logo.alt = 'VAI';
+          logo.style.maxHeight = '24px';
+        }
+      });
+    }
+    var observer = new MutationObserver(function() { applyVaiLogo(); });
+    function startObserving() {
+      if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiLogo(); }
+    }
+    if (document.body) startObserving();
+    else document.addEventListener('DOMContentLoaded', startObserving);
+  })();
+}
+
+if (process.env.APP_ID === 'discussions') {
+  (function() {
+    var vaiDarkLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IiM0OTBCOEEiLz4KPHBhdGggZD0iTTYxLjgwNDcgMzEuMTIyNkg1NS45MTQ5TDUzLjcyNDggMjUuOTA0OUw0Mi43MzUxIDI1Ljg4NjFMNDAuNjM0IDMxLjEyMjZIMzQuNzg2M0wzNC42OTQyIDMwLjk0NjlMNDQuOTk1NSA1LjE4Nzg4TDQ1LjI4MTIgNS4wNDUxN0M0Ny4yMTA2IDUuMjMzMzYgNDkuNTYgNC44MTMwNiA1MS40Mzc5IDUuMDQ1MTdDNTEuNTMxNiA1LjA1NjE0IDUxLjYyODMgNS4wNDA0NiA1MS42OTA4IDUuMTM0NTZMNjEuODA0NyAzMS4xMjI2Wk01MS45MDMxIDIwLjgzMTVMNDguNDAxNyAxMS4wNTQ4TDQ0LjU2MTUgMjAuODMxNUg1MS45MDMxWiIgZmlsbD0iIzQ5MEI4QSIvPgo8cGF0aCBkPSJNNjkuOTk5OSAzMS4wMzc5QzY4Ljc5MTcgMzEuMDU5OSA2Ny41NzcyIDMxLjAwOTcgNjYuMzY4OSAzMS4wMzQ4QzY2LjAxOTMgMzEuMDQyNiA2NC4zOTczIDMxLjI4MjYgNjQuMjMxOSAzMS4wMzk1QzY0LjE4MDQgMzAuOTc4MyA2NC4yODE4IDMwLjkzMTMgNjQuMjgxOCAzMC45MDkzVjUuMDUxNDRINjkuODczNUw3MC4wMDE1IDUuMTgwMDRWMzEuMDM3OUg2OS45OTk5WiIgZmlsbD0iIzQ5MEI4QSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSIjNDkwQjhBIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==';
+    var style = document.createElement('style');
+    style.textContent = 'html footer.footer { display: none !important; }';
+    document.head.appendChild(style);
+
+    function applyVaiLogo() {
+      var imgs = document.querySelectorAll('header .logo img, header a[href*="/dashboard"] img, header a[href="/"] img');
+      imgs.forEach(function(logo) {
+        if (logo.src.indexOf('data:image/svg') === -1) {
+          logo.src = vaiDarkLogo;
+          logo.alt = 'VAI';
+          logo.style.maxHeight = '24px';
+        }
+      });
+    }
+    var observer = new MutationObserver(function() { applyVaiLogo(); });
+    function startObserving() {
+      if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiLogo(); }
     }
     if (document.body) startObserving();
     else document.addEventListener('DOMContentLoaded', startObserving);
