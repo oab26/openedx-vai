@@ -243,6 +243,221 @@ if (process.env.APP_ID === 'authn') {
 )
 
 
+# VAI Learner Dashboard MFE styling — custom navbar, empty state, recommended section, footer
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "mfe-env-config-buildtime-definitions",
+        """
+if (process.env.APP_ID === 'learner-dashboard') {
+  (function() {
+    var lmsBase = '{% if ENABLE_HTTPS %}https://{{ LMS_HOST }}{% else %}http://{{ LMS_HOST }}:8000{% endif %}';
+    var vaiDarkLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IiM0OTBCOEEiLz4KPHBhdGggZD0iTTYxLjgwNDcgMzEuMTIyNkg1NS45MTQ5TDUzLjcyNDggMjUuOTA0OUw0Mi43MzUxIDI1Ljg4NjFMNDAuNjM0IDMxLjEyMjZIMzQuNzg2M0wzNC42OTQyIDMwLjk0NjlMNDQuOTk1NSA1LjE4Nzg4TDQ1LjI4MTIgNS4wNDUxN0M0Ny4yMTA2IDUuMjMzMzYgNDkuNTYgNC44MTMwNiA1MS40Mzc5IDUuMDQ1MTdDNTEuNTMxNiA1LjA1NjE0IDUxLjYyODMgNS4wNDA0NiA1MS42OTA4IDUuMTM0NTZMNjEuODA0NyAzMS4xMjI2Wk01MS45MDMxIDIwLjgzMTVMNDguNDAxNyAxMS4wNTQ4TDQ0LjU2MTUgMjAuODMxNUg1MS45MDMxWiIgZmlsbD0iIzQ5MEI4QSIvPgo8cGF0aCBkPSJNNjkuOTk5OSAzMS4wMzc5QzY4Ljc5MTcgMzEuMDU5OSA2Ny41NzcyIDMxLjAwOTcgNjYuMzY4OSAzMS4wMzQ4QzY2LjAxOTMgMzEuMDQyNiA2NC4zOTczIDMxLjI4MjYgNjQuMjMxOSAzMS4wMzk1QzY0LjE4MDQgMzAuOTc4MyA2NC4yODE4IDMwLjkzMTMgNjQuMjgxOCAzMC45MDkzVjUuMDUxNDRINjkuODczNUw3MC4wMDE1IDUuMTgwMDRWMzEuMDM3OUg2OS45OTk5WiIgZmlsbD0iIzQ5MEI4QSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSIjNDkwQjhBIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==';
+    var vaiWhiteLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02MS44MDQ3IDMxLjEyMjZINTUuOTE0OUw1My43MjQ4IDI1LjkwNDlMNDIuNzM1MSAyNS44ODYxTDQwLjYzNCAzMS4xMjI2SDM0Ljc4NjNMMzQuNjk0MiAzMC45NDY5TDQ0Ljk5NTUgNS4xODc4OEw0NS4yODEyIDUuMDQ1MTdDNDcuMjEwNiA1LjIzMzM2IDQ5LjU2IDQuODEzMDYgNTEuNDM3OSA1LjA0NTE3QzUxLjUzMTYgNS4wNTYxNCA1MS42MjgzIDUuMDQwNDYgNTEuNjkwOCA1LjEzNDU2TDYxLjgwNDcgMzEuMTIyNlpNNTEuOTAzMSAyMC44MzE1TDQ4LjQwMTcgMTEuMDU0OEw0NC41NjE1IDIwLjgzMTVINTEuOTAzMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02OS45OTk5IDMxLjAzNzlDNjguNzkxNyAzMS4wNTk5IDY3LjU3NzIgMzEuMDA5NyA2Ni4zNjg5IDMxLjAzNDhDNjYuMDE5MyAzMS4wNDI2IDY0LjM5NzMgMzEuMjgyNiA2NC4yMzE5IDMxLjAzOTVDNjQuMTgwNCAzMC45NzgzIDY0LjI4MTggMzAuOTMxMyA2NC4yODE4IDMwLjkwOTNWNS4wNTE0NEg2OS44NzM1TDcwLjAwMTUgNS4xODAwNFYzMS4wMzc5SDY5Ljk5OTlaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=';
+    var catSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#F3EDFF"/><stop offset="100%" style="stop-color:#E8DEFF"/></linearGradient></defs><circle cx="100" cy="100" r="90" fill="url(#bg)"/><g transform="translate(50, 30)"><path d="M15 40 L25 10 L35 35" fill="#490B8A" stroke="#490B8A" stroke-width="2"/><path d="M65 40 L75 10 L85 35" fill="#490B8A" stroke="#490B8A" stroke-width="2"/><ellipse cx="50" cy="80" rx="45" ry="50" fill="#490B8A"/><ellipse cx="50" cy="85" rx="38" ry="35" fill="#5C1FA0"/><circle cx="35" cy="65" r="12" fill="white"/><circle cx="65" cy="65" r="12" fill="white"/><circle cx="37" cy="63" r="6" fill="#101114"/><circle cx="67" cy="63" r="6" fill="#101114"/><circle cx="39" cy="61" r="2" fill="white"/><circle cx="69" cy="61" r="2" fill="white"/><ellipse cx="50" cy="82" rx="5" ry="3" fill="#FF8FAB"/><path d="M40 90 Q50 100 60 90" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="15" y1="75" x2="30" y2="78" stroke="white" stroke-width="1.5" stroke-linecap="round"/><line x1="15" y1="82" x2="30" y2="82" stroke="white" stroke-width="1.5" stroke-linecap="round"/><line x1="70" y1="78" x2="85" y2="75" stroke="white" stroke-width="1.5" stroke-linecap="round"/><line x1="70" y1="82" x2="85" y2="82" stroke="white" stroke-width="1.5" stroke-linecap="round"/><circle cx="28" cy="45" r="8" fill="none" stroke="#2DBE6C" stroke-width="3"/><line x1="34" y1="51" x2="42" y2="59" stroke="#2DBE6C" stroke-width="3" stroke-linecap="round"/></g></svg>';
+
+    var fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
+
+    var style = document.createElement('style');
+    style.id = 'vai-dashboard-styles';
+    style.textContent = [
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Regular.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-ExtraBold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }",
+      "html body { font-family: 'Garet', 'Poppins', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; background: #FAFAFA !important; }",
+      "html header.site-header-desktop { background: #FFFFFF !important; border: none !important; padding: 0 !important; box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10) !important; }",
+      "html header .container-fluid { max-width: 1600px !important; margin: 0 auto !important; padding: 0 15px !important; }",
+      "html header .nav-container { min-height: auto !important; }",
+      "html header .logo { display: flex !important; align-items: center !important; }",
+      "html header .logo img { height: 24px !important; width: auto !important; }",
+      "html header .main-nav { margin-left: 38px !important; }",
+      "html header .main-nav .nav-link { font-size: 14px !important; font-weight: 500 !important; line-height: 22px !important; color: #374151 !important; background: transparent !important; padding: 20px 0 !important; margin: 0 16px 0 0 !important; border-radius: 0 !important; border-bottom: 2px solid transparent !important; transition: color 0.2s, border-color 0.2s !important; }",
+      "html header .main-nav .nav-link:hover, html header .main-nav .nav-link.active { color: #111827 !important; border-bottom: 2px solid #490B8A !important; background: transparent !important; }",
+      "html header .menu-trigger { padding: 9px 15px !important; background: #F5ECFF !important; color: #490B8A !important; font-size: 14px !important; font-weight: 500 !important; line-height: 20px !important; border-radius: 200px !important; border: none !important; margin: 12px 0 !important; }",
+      "html header .menu-trigger .avatar { display: none !important; }",
+      "html header .menu-trigger svg:last-child { display: none !important; }",
+      "html header .menu-trigger::after { content: '' !important; margin: 4px 0 0 4px !important; border: 2px solid #490B8A !important; border-width: 2px 2px 0 0 !important; transform: rotate(135deg) !important; height: 5px !important; width: 5px !important; display: inline-block !important; vertical-align: top !important; position: relative !important; top: 2px !important; }",
+      "html main { background: #FAFAFA !important; }",
+      "html main > div#dashboard-container { max-width: 1200px !important; margin: 0 auto !important; padding: 0 40px !important; }",
+      "html .course-list-heading-container { display: none !important; }",
+      "html .sidebar-column { display: none !important; }",
+      "html .course-list-column { flex: 0 0 100% !important; max-width: 100% !important; padding: 0 !important; }",
+      "html .container-mw-xl { max-width: 100% !important; padding: 0 !important; }",
+      "html #dashboard-content .row { margin: 0 !important; }",
+      "html .course-list-container { padding-top: 40px !important; }",
+      "html #no-courses-content-view { flex-direction: column !important; align-items: center !important; text-align: center !important; padding: 60px 20px 40px !important; background: #FFFFFF !important; border-radius: 16px !important; border: 1px solid #E8E8E8 !important; margin-bottom: 0 !important; }",
+      "html #no-courses-content-view > img { display: none !important; }",
+      "html #no-courses-content-view > h1 { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800 !important; font-size: 32px !important; line-height: 1.3 !important; color: #101114 !important; margin-bottom: 12px !important; }",
+      "html #no-courses-content-view > p { font-size: 16px !important; color: #666666 !important; margin-bottom: 32px !important; }",
+      "html #no-courses-content-view .btn-brand, html a.btn-brand { background: transparent !important; border: 2px solid #490B8A !important; color: #490B8A !important; border-radius: 200px !important; font-weight: 600 !important; font-size: 15px !important; padding: 12px 32px !important; transition: all 0.2s ease !important; text-decoration: none !important; }",
+      "html #no-courses-content-view .btn-brand:hover, html a.btn-brand:hover { background: #490B8A !important; color: #FFFFFF !important; }",
+      "html #no-courses-content-view .btn-brand .pgn__icon, html a.btn-brand .pgn__icon { display: none !important; }",
+      "html #vai-cat-illustration { width: 200px; height: 200px; margin-bottom: 24px; }",
+      "html #vai-recommended-section { max-width: 1200px; margin: 48px auto 0; padding: 0 40px 60px; }",
+      "html #vai-recommended-section .vai-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }",
+      "html #vai-recommended-section .vai-section-title { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800; font-size: 36px; color: #101114; margin: 0; }",
+      "html #vai-recommended-section .vai-nav-arrows { display: flex; gap: 12px; }",
+      "html #vai-recommended-section .vai-nav-arrows button { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #490B8A; background: transparent; color: #490B8A; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 20px; }",
+      "html #vai-recommended-section .vai-nav-arrows button:hover { background: #490B8A; color: white; }",
+      "html .vai-courses-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }",
+      "@media (max-width: 1100px) { html .vai-courses-grid { grid-template-columns: repeat(3, 1fr); } }",
+      "@media (max-width: 800px) { html .vai-courses-grid { grid-template-columns: repeat(2, 1fr); } }",
+      "@media (max-width: 550px) { html .vai-courses-grid { grid-template-columns: 1fr; } }",
+      "html .vai-course-card { background: #FFFFFF; border-radius: 12px; overflow: hidden; border: 1px solid #E8E8E8; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; }",
+      "html .vai-course-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }",
+      "html .vai-course-card-img { width: 100%; height: 160px; object-fit: cover; }",
+      "html .vai-course-card-body { padding: 16px; }",
+      "html .vai-course-card-org { font-size: 11px; font-weight: 600; color: #490B8A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }",
+      "html .vai-course-card-title { font-size: 15px; font-weight: 600; color: #101114; line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }",
+      "html .vai-browse-all-container { text-align: center; }",
+      "html .vai-browse-all-btn { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 2px solid #490B8A; color: #490B8A; border-radius: 200px; font-weight: 600; font-size: 15px; padding: 12px 32px; cursor: pointer; transition: all 0.2s; text-decoration: none; }",
+      "html .vai-browse-all-btn:hover { background: #490B8A; color: #FFFFFF; text-decoration: none; }",
+      "html footer.footer { display: none !important; }",
+      "html .wrapper-footer { background: #101114 !important; border-top: none !important; padding: 89px 0 41px !important; box-shadow: none !important; }",
+      "@media (max-width: 767px) { html .wrapper-footer { padding: 40px 0 30px !important; } }",
+      "html #vai-footer { margin: 0 auto; padding: 0 120px; max-width: 1200px; box-sizing: border-box; }",
+      "@media (max-width: 767px) { html #vai-footer { padding: 0 20px; } }",
+      "html .footer-main { display: flex; justify-content: space-between; }",
+      "@media (max-width: 767px) { html .footer-main { flex-direction: column; gap: 40px; } }",
+      "html .footer-brand { width: 180px; flex-shrink: 0; }",
+      "@media (max-width: 767px) { html .footer-brand { width: 100%; } }",
+      "html .footer-logo { width: 70px; height: auto; display: block; }",
+      "html .footer-social { margin-top: 73px; }",
+      "@media (max-width: 767px) { html .footer-social { margin-top: 30px; } }",
+      "html .footer-social p { font-size: 14px; color: #fff; margin: 0 0 15px; font-weight: 400; }",
+      "html .footer-social-icons { display: flex; gap: 18px; align-items: center; }",
+      "html .footer-social-icons a { display: flex; align-items: center; transition: opacity 0.2s; text-decoration: none; }",
+      "html .footer-social-icons a:hover { opacity: 0.7; }",
+      "html .footer-social-icons a svg { width: 24px; height: 24px; }",
+      "html .footer-links { display: flex; gap: 30px; }",
+      "@media (max-width: 767px) { html .footer-links { flex-wrap: wrap; gap: 30px; } }",
+      "html .footer-links-col { width: 170px; }",
+      "@media (max-width: 767px) { html .footer-links-col { width: calc(50% - 15px); } }",
+      "html .footer-links-col h4 { font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 20px; font-weight: 500; color: #fff; margin: 0 0 20px; }",
+      "html .footer-links-col a { display: block; font-size: 14px; font-weight: 400; color: #fff; text-decoration: none; line-height: normal; margin-bottom: 10px; transition: opacity 0.2s; }",
+      "html .footer-links-col a:hover { opacity: 0.7; text-decoration: none; color: #fff; }",
+      "html .footer-contact-item { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }",
+      "html .footer-contact-item svg { width: 20px; height: 20px; flex-shrink: 0; }",
+      "html .footer-contact-item a { margin-bottom: 0; }",
+      "html .footer-bottom { margin-top: 30px; }",
+      "html .footer-separator { height: 1px; background: rgba(255,255,255,0.2); }",
+      "html .footer-copyright { text-align: center; font-size: 14px; color: #fff; margin-top: 21px; font-weight: 400; }"
+    ].join('\\n');
+    document.head.appendChild(style);
+
+    var footerHtml =
+      '<div class="wrapper-footer">' +
+        '<footer id="vai-footer" class="tutor-container">' +
+          '<div class="footer-main">' +
+            '<div class="footer-brand">' +
+              '<img class="footer-logo" src="' + vaiWhiteLogo + '" alt="VAI Logo">' +
+              '<div class="footer-social"><p>Connect With Us:</p>' +
+                '<div class="footer-social-icons">' +
+                  '<a href="#" aria-label="LinkedIn" rel="noopener" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="white"/></svg></a>' +
+                  '<a href="#" aria-label="Facebook" rel="noopener" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 12c0-6.627-5.373-12-12-12S0 5.373 0 12c0 5.99 4.388 10.954 10.125 11.854V15.47H7.078V12h3.047V9.356c0-3.007 1.792-4.668 4.533-4.668 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874V12h3.328l-.532 3.47h-2.796v8.385C19.612 22.954 24 17.99 24 12z" fill="white"/></svg></a>' +
+                  '<a href="#" aria-label="Instagram" rel="noopener" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.882 0 1.441 1.441 0 012.882 0z" fill="white"/></svg></a>' +
+                  '<a href="#" aria-label="X" rel="noopener" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="white"/></svg></a>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="footer-links">' +
+              '<div class="footer-links-col"><h4>Programs</h4><a href="#">Small Animal Surgery</a><a href="#">Diagnostic Imaging</a><a href="#">Emergency &amp; Critical Care</a><a href="#">Practice Management</a></div>' +
+              '<div class="footer-links-col"><h4>Quick Links</h4><a href="#">About Us</a><a href="#">Courses</a><a href="#">Clinic Subscriptions</a><a href="#">Insights</a><a href="#">Contact Us</a></div>' +
+              '<div class="footer-links-col"><h4>Contact</h4>' +
+                '<div class="footer-contact-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><a href="mailto:enquire@vai.com">enquire@vai.com</a></div>' +
+                '<div class="footer-contact-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M22 6l-10 7L2 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><a href="tel:+442079460011">+44 20 7946 0011</a></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="footer-bottom"><div class="footer-separator"></div><p class="footer-copyright">&copy; ' + new Date().getFullYear() + ' Veterinary Academy International. All Rights Reserved.</p></div>' +
+        '</footer>' +
+      '</div>';
+
+    function applyVaiDashboard() {
+      var logoImg = document.querySelector('header .logo img');
+      if (logoImg && !logoImg.getAttribute('data-vai')) {
+        logoImg.setAttribute('data-vai', 'true');
+        logoImg.src = vaiDarkLogo;
+        logoImg.alt = 'VAI';
+      }
+      var navLinks = document.querySelectorAll('nav[aria-label="Main"] a');
+      navLinks.forEach(function(link) {
+        if (link.textContent.trim() === 'Discover New') link.textContent = 'Discover';
+      });
+      var emptyState = document.getElementById('no-courses-content-view');
+      if (emptyState && !emptyState.getAttribute('data-vai')) {
+        emptyState.setAttribute('data-vai', 'true');
+        var catDiv = document.createElement('div');
+        catDiv.id = 'vai-cat-illustration';
+        catDiv.innerHTML = catSvg;
+        var firstH1 = emptyState.querySelector('h1');
+        if (firstH1) { emptyState.insertBefore(catDiv, firstH1); firstH1.textContent = 'Ready to begin your journey?'; }
+        var subtitle = emptyState.querySelector('p');
+        if (subtitle) subtitle.textContent = 'Explore our courses and start learning today';
+        var btn = emptyState.querySelector('.btn-brand');
+        if (btn) btn.innerHTML = 'Browse all Courses <span style="margin-left:8px">\\u2192</span>';
+      }
+      if (!document.getElementById('vai-recommended-section')) {
+        var mainEl = document.querySelector('main');
+        if (mainEl) {
+          var recSection = document.createElement('div');
+          recSection.id = 'vai-recommended-section';
+          recSection.innerHTML =
+            '<div class="vai-section-header"><h2 class="vai-section-title">Recommended for You</h2>' +
+            '<div class="vai-nav-arrows"><button aria-label="Previous">&#8592;</button><button aria-label="Next">&#8594;</button></div></div>' +
+            '<div class="vai-courses-grid" id="vai-courses-grid"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;">Loading courses...</div></div>' +
+            '<div class="vai-browse-all-container"><a href="' + lmsBase + '/courses" class="vai-browse-all-btn">Browse all Courses <span>\\u2192</span></a></div>';
+          mainEl.parentElement.insertBefore(recSection, mainEl.nextSibling);
+          fetchCourses();
+        }
+      }
+      var defaultFooter = document.querySelector('footer.footer');
+      if (defaultFooter) defaultFooter.style.display = 'none';
+      if (!document.getElementById('vai-footer')) {
+        var footerContainer = document.createElement('div');
+        footerContainer.innerHTML = footerHtml;
+        document.body.appendChild(footerContainer.firstChild);
+      }
+    }
+
+    function fetchCourses() {
+      var grid = document.getElementById('vai-courses-grid');
+      if (!grid) return;
+      fetch(lmsBase + '/api/courses/v1/courses/?page_size=8&ordering=-start')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          var courses = data.results || [];
+          if (courses.length === 0) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">No courses available yet.</div>'; return; }
+          var html = '';
+          courses.forEach(function(course) {
+            var imgSrc = course.media && course.media.image && course.media.image.large ? course.media.image.large : '';
+            var imgStyle = imgSrc ? 'background:url(' + imgSrc + ') center/cover no-repeat' : 'background:linear-gradient(135deg,#490B8A 0%,#7B2FBE 100%)';
+            html += '<a href="' + lmsBase + '/courses/' + course.course_id + '/about" class="vai-course-card" style="text-decoration:none">' +
+              '<div class="vai-course-card-img" style="' + imgStyle + '"></div>' +
+              '<div class="vai-course-card-body"><div class="vai-course-card-org">' + (course.org || 'VAI') + '</div>' +
+              '<div class="vai-course-card-title">' + (course.name || 'Untitled') + '</div></div></a>';
+          });
+          grid.innerHTML = html;
+        })
+        .catch(function() { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">Could not load courses.</div>'; });
+    }
+
+    var observer = new MutationObserver(function() { applyVaiDashboard(); });
+    function startObserving() {
+      if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiDashboard(); }
+    }
+    if (document.body) startObserving();
+    else document.addEventListener('DOMContentLoaded', startObserving);
+  })();
+}
+""",
+    )
+)
+
+
 # Include js file in lms main.html, main_django.html, and certificate.html
 hooks.Filters.ENV_PATCHES.add_items(
     [
