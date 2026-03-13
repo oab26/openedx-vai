@@ -286,12 +286,42 @@ if (process.env.APP_ID === 'learner-dashboard') {
       "html header.site-header-mobile button svg { color: #101114 !important; }",
       "html main { background: #FAFAFA !important; }",
       "html main > div#dashboard-container { max-width: 1200px !important; margin: 0 auto !important; padding: 0 40px !important; }",
-      "html .course-list-heading-container { display: none !important; }",
+      "html h1[class] { display: none !important; }",
       "html .sidebar-column { display: none !important; }",
       "html .course-list-column { flex: 0 0 100% !important; max-width: 100% !important; padding: 0 !important; }",
       "html .container-mw-xl { max-width: 100% !important; padding: 0 !important; }",
       "html #dashboard-content .row { margin: 0 !important; }",
-      "html .course-list-container { padding-top: 40px !important; }",
+      "html .course-list-container { padding-top: 20px !important; }",
+      "html .course-list-container > .d-flex.flex-column { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }",
+      "@media (max-width: 900px) { html .course-list-container > .d-flex.flex-column { grid-template-columns: 1fr !important; } html body .course-card .pgn__card-wrapper-image-cap.horizontal, html body .course-card .pgn__card-wrapper-image-cap { width: 100% !important; min-width: 100% !important; max-width: 100% !important; height: 180px !important; margin: 0 !important; border-radius: 14px 14px 0 0 !important; } html body .course-card .pgn__card.horizontal, html body .course-card .pgn__card { min-height: auto !important; } html body .course-card .pgn__card-body { min-height: auto !important; padding: 16px !important; } }",
+      "html .course-card { margin-bottom: 0 !important; border-radius: 14px !important; overflow: hidden !important; border: 1px solid #E8E8E8 !important; box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important; background: #FFFFFF !important; }",
+      "html .course-card .pgn__card.horizontal { background: #FFFFFF !important; border: none !important; border-radius: 14px 14px 0 0 !important; box-shadow: none !important; min-height: 256px !important; }",
+      "html .course-card .pgn__card .d-flex.flex-column.w-100 { border-radius: 0 !important; }",
+      "html .course-card .pgn__card-wrapper-image-cap.horizontal { width: 208px !important; min-width: 208px !important; max-width: 208px !important; height: 240px !important; margin: 8px !important; border-radius: 12px !important; overflow: hidden !important; flex-shrink: 0 !important; }",
+      "html .course-card .pgn__card-image-cap { width: 100% !important; height: 100% !important; object-fit: cover !important; }",
+      "html .course-card .pgn__card-body { display: flex !important; flex-direction: column !important; justify-content: space-between !important; padding: 18px 16px 18px 18px !important; min-height: 220px !important; }",
+      "html .course-card .course-card-title { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800 !important; font-size: 20px !important; line-height: 30px !important; color: #101114 !important; text-decoration: none !important; }",
+      "html .course-card .course-card-title:hover { text-decoration: none !important; color: #490B8A !important; }",
+      "html .course-card .pgn__card-header { padding: 0 !important; margin-bottom: 0 !important; }",
+      "html .course-card .pgn__card-header-title-md h3 { margin: 0 !important; }",
+      "html .course-card .pgn__card-section { display: none !important; }",
+      "html .vai-card-meta { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }",
+      "html .vai-card-meta-row { display: flex; align-items: center; gap: 10px; font-family: 'Garet', 'Poppins', sans-serif; font-size: 16px; color: #252525; line-height: normal; }",
+      "html .vai-card-meta-row svg { width: 24px; height: 24px; flex-shrink: 0; }",
+      "html .course-card .pgn__card-header-actions .btn-icon { color: #101114 !important; }",
+      "html .course-card .pgn__card-footer { padding: 0 !important; border-top: none !important; margin-top: auto !important; }",
+      "html .course-card .pgn__card-footer.horizontal { flex-direction: row !important; }",
+      "html .course-card .pgn__action-row { gap: 10px !important; flex-wrap: nowrap !important; }",
+      "html .course-card .btn.btn-primary { background: #490B8A !important; border-color: #490B8A !important; border-radius: 200px !important; height: 45px !important; padding: 10px 22px !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 700 !important; font-size: 16px !important; line-height: 1 !important; color: white !important; display: inline-flex !important; align-items: center !important; gap: 10px !important; white-space: nowrap !important; }",
+      "html .course-card .btn.btn-primary:hover { background: #3a0970 !important; border-color: #3a0970 !important; }",
+      "html .course-card .btn.btn-outline-primary, html .course-card .btn.btn-tertiary { background: transparent !important; border: 1px solid #490B8A !important; color: #490B8A !important; border-radius: 200px !important; height: 45px !important; padding: 10px 22px !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 700 !important; font-size: 16px !important; line-height: 1 !important; display: inline-flex !important; align-items: center !important; gap: 10px !important; white-space: nowrap !important; }",
+      "html .course-card-banners { background: #eee !important; border-radius: 0 0 14px 14px !important; }",
+      "html .course-card-banners .alert { background: #eee !important; border: none !important; border-radius: 0 0 14px 14px !important; margin: 0 !important; padding: 8px 16px !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 12px !important; color: #101114 !important; min-height: 40px !important; max-height: 40px !important; height: 40px !important; display: flex !important; align-items: center !important; }",
+      "html .course-card-banners .alert .pgn__icon { width: 24px !important; height: 24px !important; }",
+      "html .course-card-banners .alert-message-content { font-size: 12px !important; line-height: normal !important; }",
+      "html .course-card-banners .vai-purple { color: #490B8A !important; font-weight: 500 !important; }",
+      "html .course-list-heading-container { display: block !important; margin-bottom: 24px !important; }",
+      "html .course-list-heading-container h2 { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800 !important; font-size: 32px !important; color: #101114 !important; margin: 0 0 8px !important; }",
       "html #no-courses-content-view { flex-direction: column !important; align-items: center !important; text-align: center !important; padding: 60px 20px 40px !important; background: #FFFFFF !important; border-radius: 16px !important; border: 1px solid #E8E8E8 !important; margin-bottom: 0 !important; }",
       "html #no-courses-content-view > img { display: none !important; }",
       "html #no-courses-content-view > h1 { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800 !important; font-size: 32px !important; line-height: 1.3 !important; color: #101114 !important; margin-bottom: 12px !important; }",
@@ -409,6 +439,39 @@ if (process.env.APP_ID === 'learner-dashboard') {
       var navLinks = document.querySelectorAll('nav[aria-label="Main"] a');
       navLinks.forEach(function(link) {
         if (link.textContent.trim() === 'Discover New') link.textContent = 'Discover';
+      });
+      var CLOCK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+      var FLAG_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>';
+      var FORWARD_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+      document.querySelectorAll('.course-card').forEach(function(card) {
+        if (card.getAttribute('data-vai-enhanced')) return;
+        card.setAttribute('data-vai-enhanced', 'true');
+        var beginBtn = card.querySelector('.btn.btn-primary');
+        if (beginBtn && !beginBtn.querySelector('.vai-arrow')) {
+          var arrowSpan = document.createElement('span');
+          arrowSpan.className = 'vai-arrow';
+          arrowSpan.innerHTML = FORWARD_SVG;
+          arrowSpan.style.display = 'inline-flex';
+          arrowSpan.style.alignItems = 'center';
+          beginBtn.appendChild(arrowSpan);
+        }
+        var cardBody = card.querySelector('.pgn__card-body');
+        if (cardBody && !cardBody.querySelector('.vai-card-meta')) {
+          var metaDiv = document.createElement('div');
+          metaDiv.className = 'vai-card-meta';
+          metaDiv.innerHTML = '<div class="vai-card-meta-row">' + CLOCK_SVG + '<span>Self-paced</span></div><div class="vai-card-meta-row">' + FLAG_SVG + '<span>Enrolled</span></div>';
+          var cardHeader = cardBody.querySelector('.pgn__card-header');
+          if (cardHeader) cardHeader.after(metaDiv);
+        }
+        var alertMsg = card.querySelector('.course-card-banners .alert-message-content');
+        if (alertMsg && !alertMsg.getAttribute('data-vai-styled')) {
+          alertMsg.setAttribute('data-vai-styled', 'true');
+          var text = alertMsg.textContent || '';
+          var gradeMatch = text.match(/(\\d+[\\u200F\\u200E]?%)/);
+          if (gradeMatch) {
+            alertMsg.innerHTML = 'A <span class="vai-purple">passing grade of ' + gradeMatch[0] + '</span> is required to complete this course successfully.';
+          }
+        }
       });
       var emptyState = document.getElementById('no-courses-content-view');
       if (emptyState && !emptyState.getAttribute('data-vai')) {
