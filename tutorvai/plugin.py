@@ -300,25 +300,44 @@ if (process.env.APP_ID === 'learner-dashboard') {
       "html #no-courses-content-view .btn-brand:hover, html a.btn-brand:hover { background: #490B8A !important; color: #FFFFFF !important; }",
       "html #no-courses-content-view .btn-brand .pgn__icon, html a.btn-brand .pgn__icon { display: none !important; }",
       "html #vai-cat-illustration { width: 200px; height: 200px; margin-bottom: 24px; }",
-      "html #vai-recommended-section { max-width: 1200px; margin: 48px auto 0; padding: 0 40px 60px; }",
-      "html #vai-recommended-section .vai-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }",
-      "html #vai-recommended-section .vai-section-title { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800; font-size: 36px; color: #101114; margin: 0; }",
-      "html #vai-recommended-section .vai-nav-arrows { display: flex; gap: 12px; }",
-      "html #vai-recommended-section .vai-nav-arrows button { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #490B8A; background: transparent; color: #490B8A; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 20px; }",
-      "html #vai-recommended-section .vai-nav-arrows button:hover { background: #490B8A; color: white; }",
-      "html .vai-courses-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; }",
-      "@media (max-width: 1100px) { html .vai-courses-grid { grid-template-columns: repeat(3, 1fr); } }",
-      "@media (max-width: 800px) { html .vai-courses-grid { grid-template-columns: repeat(2, 1fr); } }",
-      "@media (max-width: 550px) { html .vai-courses-grid { grid-template-columns: 1fr; } }",
-      "html .vai-course-card { background: #FFFFFF; border-radius: 12px; overflow: hidden; border: 1px solid #E8E8E8; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; }",
-      "html .vai-course-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }",
-      "html .vai-course-card-img { width: 100%; height: 160px; object-fit: cover; }",
-      "html .vai-course-card-body { padding: 16px; }",
-      "html .vai-course-card-org { font-size: 11px; font-weight: 600; color: #490B8A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }",
-      "html .vai-course-card-title { font-size: 15px; font-weight: 600; color: #101114; line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }",
-      "html .vai-browse-all-container { text-align: center; }",
-      "html .vai-browse-all-btn { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 2px solid #490B8A; color: #490B8A; border-radius: 200px; font-weight: 600; font-size: 15px; padding: 12px 32px; cursor: pointer; transition: all 0.2s; text-decoration: none; }",
-      "html .vai-browse-all-btn:hover { background: #490B8A; color: #FFFFFF; text-decoration: none; }",
+      "html #vai-recommended-section { max-width: 1600px; margin: 0 auto; padding: 50px 15px 60px; }",
+      "html .rfy-header { display: flex; align-items: flex-end; justify-content: space-between; margin: 0 0 28px; gap: 20px; flex-wrap: wrap; }",
+      "html .rfy-text { max-width: 761px; }",
+      "html .rfy-text h2 { font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 28px; font-weight: 800; line-height: 1.3; color: #101114; margin: 0 0 10px; }",
+      "@media (min-width: 768px) { html .rfy-text h2 { font-size: 42px; line-height: 70px; margin: 0; } }",
+      "html .rfy-text p { font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 16px; line-height: 1.5; color: #101114; margin: 0; }",
+      "@media (min-width: 768px) { html .rfy-text p { font-size: 20px; } }",
+      "html .rfy-arrows { display: flex; gap: 8px; flex-shrink: 0; }",
+      "html .rfy-arrow { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; border: 1px solid #490B8A; border-radius: 200px; background: transparent; cursor: pointer; transition: all 0.2s ease; color: #490B8A; padding: 0; }",
+      "@media (min-width: 768px) { html .rfy-arrow { width: 108px; } }",
+      "html .rfy-arrow svg { width: 24px; height: 24px; flex-shrink: 0; }",
+      "html .rfy-arrow:hover { background: #490B8A; color: #fff; }",
+      "html .rfy-arrow:hover svg { stroke: #fff; }",
+      "html .rfy-carousel-wrapper { overflow: hidden; }",
+      "html .rfy-carousel { display: flex; gap: 14px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; padding: 10px 0 20px; }",
+      "html .rfy-carousel::-webkit-scrollbar { display: none; }",
+      "html .rfy-card { flex: 0 0 240px; height: 340px; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; transition: all 0.35s ease; text-decoration: none !important; display: block; background: #fff; border: 6px solid transparent; }",
+      "@media (min-width: 576px) { html .rfy-card { flex: 0 0 260px; height: 370px; } }",
+      "@media (min-width: 768px) { html .rfy-card { flex: 0 0 282px; height: 399px; } }",
+      "html .rfy-card-image { position: absolute; inset: 0; z-index: 0; }",
+      "html .rfy-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }",
+      "html .rfy-card-gradient { position: absolute; left: 0; right: 0; bottom: 0; height: 50%; background: linear-gradient(to bottom, rgba(16,17,20,0), #101114); transition: height 0.35s ease; pointer-events: none; z-index: 1; }",
+      "html .rfy-card-content { position: absolute; left: 18px; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 11px; transition: bottom 0.35s ease; z-index: 2; }",
+      "html .rfy-card-tag { display: inline-block !important; background: #8fe389; color: #101114 !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 14px; line-height: 24px; padding: 2px 5px; width: fit-content; white-space: nowrap; }",
+      "html .rfy-card-title { color: #fff !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 15px; font-weight: 800; line-height: 1.3; margin: 0 !important; padding: 0 !important; max-width: 200px; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; border: none !important; }",
+      "html .rfy-card-buttons { position: absolute; left: 18px; right: 18px; bottom: 25px; display: flex; flex-direction: column; gap: 10px; opacity: 0; transform: translateY(10px); transition: all 0.3s ease 0.05s; pointer-events: none; z-index: 3; }",
+      "html .rfy-btn-primary { display: flex !important; align-items: center; justify-content: center; gap: 10px; height: 50px; max-height: 50px; box-sizing: border-box; background: #fff !important; color: #490B8A !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 16px; font-weight: 700; line-height: 1 !important; border-radius: 200px; padding: 10px 22px; white-space: nowrap; text-decoration: none !important; }",
+      "html .rfy-btn-primary svg { width: 20px; height: 20px; flex-shrink: 0; stroke: #490B8A; }",
+      "html .rfy-btn-outline { display: flex !important; align-items: center; justify-content: center; height: 50px; max-height: 50px; box-sizing: border-box; border: 1px solid #fff; background: transparent !important; color: #fff !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 16px; font-weight: 700; line-height: 1 !important; border-radius: 200px; padding: 10px 22px; white-space: nowrap; text-decoration: none !important; }",
+      "html .rfy-card:hover { border-color: #490B8A; box-shadow: 10px 10px 20px rgba(0,0,0,0.25); }",
+      "html .rfy-card:hover .rfy-card-gradient { height: 100%; }",
+      "html .rfy-card:hover .rfy-card-content { bottom: 155px; }",
+      "html .rfy-card:hover .rfy-card-buttons { opacity: 1; transform: translateY(0); pointer-events: auto; }",
+      "html .rfy-cta-wrapper { text-align: center; padding: 30px 0 0; }",
+      "html .rfy-browse-btn { display: inline-flex; align-items: center; gap: 10px; padding: 10px 22px; height: 50px; border: 1px solid #490B8A; border-radius: 200px; background: #fff; color: #490B8A !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 16px; font-weight: 700; text-decoration: none !important; transition: all 0.2s ease; }",
+      "html .rfy-browse-btn svg { width: 20px; height: 20px; flex-shrink: 0; }",
+      "html .rfy-browse-btn:hover { background: #490B8A; color: #fff !important; text-decoration: none; }",
+      "html .rfy-browse-btn:hover svg { stroke: #fff; }",
       "html footer.footer { display: none !important; }",
       "html .wrapper-footer { background: #101114 !important; border-top: none !important; padding: 89px 0 41px !important; box-shadow: none !important; }",
       "@media (max-width: 767px) { html .wrapper-footer { padding: 40px 0 30px !important; } }",
@@ -407,15 +426,35 @@ if (process.env.APP_ID === 'learner-dashboard') {
       if (!document.getElementById('vai-recommended-section')) {
         var mainEl = document.querySelector('main');
         if (mainEl) {
+          var ARROW_LEFT = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>';
+          var ARROW_RIGHT = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
           var recSection = document.createElement('div');
           recSection.id = 'vai-recommended-section';
           recSection.innerHTML =
-            '<div class="vai-section-header"><h2 class="vai-section-title">Recommended for You</h2>' +
-            '<div class="vai-nav-arrows"><button aria-label="Previous">&#8592;</button><button aria-label="Next">&#8594;</button></div></div>' +
-            '<div class="vai-courses-grid" id="vai-courses-grid"><div style="height:280px;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;">Loading courses...</div></div>' +
-            '<div class="vai-browse-all-container"><a href="' + lmsBase + '/courses" class="vai-browse-all-btn">Browse all Courses <span>\\u2192</span></a></div>';
+            '<div class="rfy-header">' +
+              '<div class="rfy-text"><h2>Recommended for You</h2>' +
+              '<p>Explore curated courses designed to enhance your knowledge and practical skills for real-world success.</p></div>' +
+              '<div class="rfy-arrows">' +
+                '<button class="rfy-arrow rfy-arrow-prev" aria-label="Previous">' + ARROW_LEFT + '</button>' +
+                '<button class="rfy-arrow rfy-arrow-next" aria-label="Next">' + ARROW_RIGHT + '</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="rfy-carousel-wrapper"><div class="rfy-carousel" id="vai-rfy-carousel">' +
+              '<div style="height:399px;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;">Loading courses...</div>' +
+            '</div></div>' +
+            '<div class="rfy-cta-wrapper"><a href="' + lmsBase + '/courses" class="rfy-browse-btn">Browse all Courses ' + ARROW_RIGHT + '</a></div>';
           mainEl.parentElement.insertBefore(recSection, mainEl.nextSibling);
           fetchCourses();
+          setTimeout(function() {
+            var carousel = document.getElementById('vai-rfy-carousel');
+            var prevBtn = recSection.querySelector('.rfy-arrow-prev');
+            var nextBtn = recSection.querySelector('.rfy-arrow-next');
+            if (carousel && prevBtn && nextBtn) {
+              var scrollAmount = 296;
+              prevBtn.addEventListener('click', function() { carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
+              nextBtn.addEventListener('click', function() { carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
+            }
+          }, 100);
         }
       }
       var defaultFooter = document.querySelector('footer.footer');
@@ -428,25 +467,36 @@ if (process.env.APP_ID === 'learner-dashboard') {
     }
 
     function fetchCourses() {
-      var grid = document.getElementById('vai-courses-grid');
-      if (!grid) return;
+      var carousel = document.getElementById('vai-rfy-carousel');
+      if (!carousel) return;
+      var GET_STARTED_ARROW = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
       fetch(lmsBase + '/api/courses/v1/courses/?page_size=8&ordering=-start')
         .then(function(res) { return res.json(); })
         .then(function(data) {
           var courses = data.results || [];
-          if (courses.length === 0) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">No courses available yet.</div>'; return; }
+          if (courses.length === 0) { carousel.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">No courses available yet.</div>'; return; }
           var html = '';
           courses.forEach(function(course) {
-            var imgSrc = course.media && course.media.image && course.media.image.large ? course.media.image.large : '';
-            var imgStyle = imgSrc ? 'background:url(' + imgSrc + ') center/cover no-repeat' : 'background:linear-gradient(135deg,#490B8A 0%,#7B2FBE 100%)';
-            html += '<a href="' + lmsBase + '/courses/' + course.course_id + '/about" class="vai-course-card" style="text-decoration:none">' +
-              '<div class="vai-course-card-img" style="' + imgStyle + '"></div>' +
-              '<div class="vai-course-card-body"><div class="vai-course-card-org">' + (course.org || 'VAI') + '</div>' +
-              '<div class="vai-course-card-title">' + (course.name || 'Untitled') + '</div></div></a>';
+            var imgSrc = (course.media && course.media.image && course.media.image.large) ? course.media.image.large : '';
+            var aboutUrl = lmsBase + '/courses/' + course.course_id + '/about';
+            html += '<a href="' + aboutUrl + '" class="rfy-card">' +
+              '<div class="rfy-card-image">' +
+                (imgSrc ? '<img src="' + imgSrc + '" alt="' + (course.name || '') + '">' : '<div style="width:100%;height:100%;background:linear-gradient(135deg,#490B8A 0%,#7B2FBE 100%)"></div>') +
+              '</div>' +
+              '<div class="rfy-card-gradient"></div>' +
+              '<div class="rfy-card-content">' +
+                '<span class="rfy-card-tag">' + (course.org || 'VAI') + '</span>' +
+                '<h3 class="rfy-card-title">' + (course.name || 'Untitled') + '</h3>' +
+              '</div>' +
+              '<div class="rfy-card-buttons">' +
+                '<span class="rfy-btn-primary">Get Started ' + GET_STARTED_ARROW + '</span>' +
+                '<span class="rfy-btn-outline">More Info</span>' +
+              '</div>' +
+            '</a>';
           });
-          grid.innerHTML = html;
+          carousel.innerHTML = html;
         })
-        .catch(function() { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">Could not load courses.</div>'; });
+        .catch(function() { carousel.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">Could not load courses.</div>'; });
     }
 
     var observer = new MutationObserver(function() { applyVaiDashboard(); });
