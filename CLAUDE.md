@@ -126,6 +126,53 @@ The watchthemes container name is `tutor_dev-watchthemes-run-b5a39ad9317c`. Chec
 - **Dark theme SCSS** always lives in `body.vai-dark-theme { }` blocks at the bottom of each SCSS file, mirroring the light-mode selectors with `-d` suffix variables.
 - **Payload CMS nested arrays limitation**: Never use nested arrays (array inside array) in Payload CMS 3.0 beta — use flattened top-level arrays instead.
 
+## MFE Styling via plugin.py
+
+### Figma Style Guide (ALWAYS follow for buttons/typography)
+Design file: `figma.com/design/nzEyLZ2r98goJZN9woS1dt/VAI-Design--Copy-`
+
+**Primary button** (node `630:13557`): `bg: #490B8A`, white text, `border-radius: 100px`, `height: 50px`, `px: 24px`, Garet Bold 16px. Hover: `#2B0157`. Disabled: `bg: #E9E7EC`, `color: #A5A0AD`. Ghosted: white bg, `border: 1px solid #490B8A`, purple text.
+
+**Secondary button** (node `630:13570`): white bg, `border: 1px solid #490B8A`, `color: #490B8A`. Hover: `bg: #F5ECFF`. Disabled: `bg: #F8F8F8`, `color: #A5A0AD`.
+
+**Font**: Garet (Book 400, Regular 500, Bold 700, ExtraBold 800) from LMS static. Fallback: Poppins via Google Fonts CDN.
+
+### How MFE patches work
+Each MFE gets a `mfe-env-config-buildtime-definitions` patch in `plugin.py`, gated by `if (process.env.APP_ID === '<mfe-name>')`. Contains injected CSS + JS (logo swap, MutationObserver for React re-renders).
+
+### Styled MFEs
+| MFE | Port | Dev file |
+|-----|------|----------|
+| authn | 1999 | `/tmp/authn-index.html` |
+| learner-dashboard | 1996 | (built into image) |
+| profile | 1995 | `/tmp/profile-index.html` |
+
+### Dev iteration (any MFE, no rebuild needed)
+```bash
+# 1. Copy current index.html from container
+docker cp tutor_dev-mfe-1:/openedx/dist/<mfe>/index.html /tmp/<mfe>-index.html
+
+# 2. Add <script> block with CSS+JS before </body> in /tmp/<mfe>-index.html
+
+# 3. Restart MFE (flush Caddy cache) + inject
+/Users/omerbhatti/Library/Python/3.9/bin/tutor dev restart mfe && sleep 5 && docker cp /tmp/<mfe>-index.html tutor_dev-mfe-1:/openedx/dist/<mfe>/index.html
+
+# 4. Hard refresh browser
+```
+
+### CSS join escaping (CRITICAL)
+- **In `/tmp/*-index.html`** (raw HTML): use `].join(' ')` — double-backslash `\\n` in HTML produces literal `\n` which CSS misparses as escape, prepending `n` to every selector after the first
+- **In `plugin.py`** (Python triple-quoted string): use `].join('\\n')` — Python `\\n` → HTML `\n` → JS newline (correct)
+
+### Production deployment (permanent)
+```bash
+/Users/omerbhatti/Library/Python/3.9/bin/tutor images build mfe
+/Users/omerbhatti/Library/Python/3.9/bin/tutor local start -d mfe
+```
+
+### CORS fonts in dev
+Garet fonts at `local.openedx.io:8000` are blocked from `apps.local.openedx.io:<port>`. Falls back to Poppins. Not an issue in production (same-origin via Caddy).
+
 ## Dependencies
 - Tutor 18.0–20.x
 - Tutor-MFE 18.0–20.x

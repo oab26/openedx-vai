@@ -575,6 +575,200 @@ if (process.env.APP_ID === 'learner-dashboard') {
 )
 
 
+# VAI Profile MFE styling — navbar, banner, buttons (Figma style guide), typography
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "mfe-env-config-buildtime-definitions",
+        """
+if (process.env.APP_ID === 'profile') {
+  (function() {
+    var lmsBase = '{% if ENABLE_HTTPS %}https://{{ LMS_HOST }}{% else %}http://{{ LMS_HOST }}:8000{% endif %}';
+    var vaiDarkLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IiM0OTBCOEEiLz4KPHBhdGggZD0iTTYxLjgwNDcgMzEuMTIyNkg1NS45MTQ5TDUzLjcyNDggMjUuOTA0OUw0Mi43MzUxIDI1Ljg4NjFMNDAuNjM0IDMxLjEyMjZIMzQuNzg2M0wzNC42OTQyIDMwLjk0NjlMNDQuOTk1NSA1LjE4Nzg4TDQ1LjI4MTIgNS4wNDUxN0M0Ny4yMTA2IDUuMjMzMzYgNDkuNTYgNC44MTMwNiA1MS40Mzc5IDUuMDQ1MTdDNTEuNTMxNiA1LjA1NjE0IDUxLjYyODMgNS4wNDA0NiA1MS42OTA4IDUuMTM0NTZMNjEuODA0NyAzMS4xMjI2Wk01MS45MDMxIDIwLjgzMTVMNDguNDAxNyAxMS4wNTQ4TDQ0LjU2MTUgMjAuODMxNUg1MS45MDMxWiIgZmlsbD0iIzQ5MEI4QSIvPgo8cGF0aCBkPSJNNjkuOTk5OSAzMS4wMzc5QzY4Ljc5MTcgMzEuMDU5OSA2Ny41NzcyIDMxLjAwOTcgNjYuMzY4OSAzMS4wMzQ4QzY2LjAxOTMgMzEuMDQyNiA2NC4zOTczIDMxLjI4MjYgNjQuMjMxOSAzMS4wMzk1QzY0LjE4MDQgMzAuOTc4MyA2NC4yODE4IDMwLjkzMTMgNjQuMjgxOCAzMC45MDkzVjUuMDUxNDRINjkuODczNUw3MC4wMDE1IDUuMTgwMDRWMzEuMDM3OUg2OS45OTk5WiIgZmlsbD0iIzQ5MEI4QSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSIjNDkwQjhBIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==';
+
+    var fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
+
+    var style = document.createElement('style');
+    style.id = 'vai-profile-styles';
+    style.textContent = [
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Regular.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-ExtraBold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }",
+      "html body { font-family: 'Garet', 'Poppins', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; background: #FAFAFA !important; }",
+      "html header.site-header-desktop { background: #FFFFFF !important; border: none !important; padding: 0 !important; box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10) !important; }",
+      "html header .container-fluid { max-width: 1600px !important; margin: 0 auto !important; padding: 0 15px !important; }",
+      "html header .nav-container { min-height: auto !important; }",
+      "html header .logo { display: flex !important; align-items: center !important; }",
+      "html header .logo img { height: 24px !important; width: auto !important; }",
+      "html header .main-nav { margin-left: 38px !important; }",
+      "html header .main-nav .nav-link { font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 14px !important; font-weight: 500 !important; line-height: 22px !important; color: #374151 !important; background: transparent !important; padding: 20px 0 !important; margin: 0 16px 0 0 !important; border-radius: 0 !important; border-bottom: 2px solid transparent !important; transition: color 0.2s, border-color 0.2s !important; }",
+      "html header .main-nav .nav-link:hover, html header .main-nav .nav-link.active { color: #111827 !important; border-bottom: 2px solid #490B8A !important; background: transparent !important; }",
+      "html header.site-header-desktop .menu-trigger { font-family: 'Garet', 'Poppins', sans-serif !important; padding: 9px 15px !important; background: #F5ECFF !important; color: #490B8A !important; font-size: 14px !important; font-weight: 500 !important; line-height: 20px !important; border-radius: 200px !important; border: none !important; margin: 12px 0 !important; }",
+      "html header.site-header-desktop .menu-trigger .avatar { display: none !important; }",
+      "html header.site-header-desktop .menu-trigger svg:last-child { display: none !important; }",
+      "html header.site-header-desktop .menu-trigger::after { content: '' !important; margin: 4px 0 0 4px !important; border: 2px solid #490B8A !important; border-width: 2px 2px 0 0 !important; transform: rotate(135deg) !important; height: 5px !important; width: 5px !important; display: inline-block !important; vertical-align: top !important; position: relative !important; top: 2px !important; }",
+      "html header.site-header-mobile { background: #FFFFFF !important; border: none !important; box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10) !important; }",
+      "html header.site-header-mobile .logo img { height: 24px !important; width: auto !important; }",
+      "html header.site-header-mobile button { background: transparent !important; border: none !important; color: #101114 !important; padding: 8px !important; }",
+      "html header.site-header-mobile button svg { color: #101114 !important; }",
+      "html main { background: #FAFAFA !important; }",
+      "html .profile-page-bg-banner { background: #490B8A !important; }",
+      "html .profile-page h1 { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 800 !important; font-size: 28px !important; color: #101114 !important; }",
+      "html .profile-page h2 { font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 700 !important; font-size: 16px !important; color: #101114 !important; }",
+      "html .profile-page p, html .profile-page span, html .profile-page div { font-family: 'Garet', 'Poppins', sans-serif !important; }",
+      "html .profile-page .btn.btn-primary { background: #490B8A !important; border-color: #490B8A !important; border-radius: 100px !important; height: 50px !important; padding: 15px 24px !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 700 !important; font-size: 16px !important; color: white !important; text-decoration: none !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; white-space: nowrap !important; line-height: 1 !important; }",
+      "html .profile-page .btn.btn-primary:hover { background: #2B0157 !important; border-color: #2B0157 !important; }",
+      "html .profile-page .btn.btn-primary:disabled { background: #E9E7EC !important; border-color: #E9E7EC !important; color: #A5A0AD !important; }",
+      "html .profile-page .btn.btn-link { color: #490B8A !important; font-family: 'Garet', 'Poppins', sans-serif !important; font-weight: 700 !important; font-size: 14px !important; text-decoration: none !important; }",
+      "html .profile-page .btn.btn-link:hover { color: #2B0157 !important; text-decoration: none !important; }",
+      "html .profile-page .btn.btn-link img, html .profile-page .btn.btn-link .pgn__icon { filter: brightness(0) saturate(100%) invert(10%) sepia(80%) saturate(5000%) hue-rotate(270deg) brightness(60%) contrast(120%) !important; }",
+      "html .profile-page .btn.btn-link.btn-sm { font-size: 14px !important; font-weight: 700 !important; }",
+      "html footer.footer { display: none !important; }",
+      "html .profile-avatar { border: 3px solid #FFFFFF !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }",
+      "html .pgn__hyperlink.standalone-link { font-family: 'Garet', 'Poppins', sans-serif !important; }",
+      "html .profile-page hr, html .profile-page [role='separator'] { border-color: #E8E8E8 !important; }"
+    ].join('\\n');
+    document.head.appendChild(style);
+
+    function applyVaiProfile() {
+      var logoImg = document.querySelector('header .logo img');
+      if (logoImg && !logoImg.getAttribute('data-vai')) {
+        logoImg.setAttribute('data-vai', 'true');
+        logoImg.src = vaiDarkLogo;
+        logoImg.alt = 'VAI';
+      }
+    }
+
+    var observer = new MutationObserver(function() { applyVaiProfile(); });
+    function startObserving() {
+      if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiProfile(); }
+    }
+    if (document.body) startObserving();
+    else document.addEventListener('DOMContentLoaded', startObserving);
+  })();
+}
+""",
+    )
+)
+
+
+# VAI Account MFE styling — navbar, buttons (Figma style guide), typography
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "mfe-env-config-buildtime-definitions",
+        """
+if (process.env.APP_ID === 'account') {
+  (function() {
+    var lmsBase = '{% if ENABLE_HTTPS %}https://{{ LMS_HOST }}{% else %}http://{{ LMS_HOST }}:8000{% endif %}';
+    var vaiDarkLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IiM0OTBCOEEiLz4KPHBhdGggZD0iTTYxLjgwNDcgMzEuMTIyNkg1NS45MTQ5TDUzLjcyNDggMjUuOTA0OUw0Mi43MzUxIDI1Ljg4NjFMNDAuNjM0IDMxLjEyMjZIMzQuNzg2M0wzNC42OTQyIDMwLjk0NjlMNDQuOTk1NSA1LjE4Nzg4TDQ1LjI4MTIgNS4wNDUxN0M0Ny4yMTA2IDUuMjMzMzYgNDkuNTYgNC44MTMwNiA1MS40Mzc5IDUuMDQ1MTdDNTEuNTMxNiA1LjA1NjE0IDUxLjYyODMgNS4wNDA0NiA1MS42OTA4IDUuMTM0NTZMNjEuODA0NyAzMS4xMjI2Wk01MS45MDMxIDIwLjgzMTVMNDguNDAxNyAxMS4wNTQ4TDQ0LjU2MTUgMjAuODMxNUg1MS45MDMxWiIgZmlsbD0iIzQ5MEI4QSIvPgo8cGF0aCBkPSJNNjkuOTk5OSAzMS4wMzc5QzY4Ljc5MTcgMzEuMDU5OSA2Ny41NzcyIDMxLjAwOTcgNjYuMzY4OSAzMS4wMzQ4QzY2LjAxOTMgMzEuMDQyNiA2NC4zOTczIDMxLjI4MjYgNjQuMjMxOSAzMS4wMzk1QzY0LjE4MDQgMzAuOTc4MyA2NC4yODE4IDMwLjkzMTMgNjQuMjgxOCAzMC45MDkzVjUuMDUxNDRINjkuODczNUw3MC4wMDE1IDUuMTgwMDRWMzEuMDM3OUg2OS45OTk5WiIgZmlsbD0iIzQ5MEI4QSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSIjNDkwQjhBIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==';
+
+    var fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap';
+    fontLink.rel = 'stylesheet';
+    document.head.appendChild(fontLink);
+
+    var style = document.createElement('style');
+    style.id = 'vai-account-styles';
+    style.textContent = [
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Regular.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }",
+      "@font-face { font-family: 'Garet'; src: url('" + lmsBase + "/static/vai/fonts/Garet-ExtraBold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }",
+      "html body { font-family: 'Garet', 'Poppins', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; background: #FFFFFF !important; }",
+      "html header.site-header-desktop { background: #FFFFFF !important; border: none !important; padding: 0 !important; box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10) !important; }",
+      "html header .container-fluid { max-width: 1600px !important; margin: 0 auto !important; padding: 0 15px !important; }",
+      "html header .nav-container { min-height: auto !important; }",
+      "html header .logo { display: flex !important; align-items: center !important; }",
+      "html header .logo img { height: 24px !important; width: auto !important; }",
+      "html header .main-nav { margin-left: 38px !important; }",
+      "html header .main-nav .nav-link { font-family: 'Garet', 'Poppins', sans-serif !important; font-size: 14px !important; font-weight: 500 !important; line-height: 22px !important; color: #374151 !important; background: transparent !important; padding: 20px 0 !important; margin: 0 16px 0 0 !important; border-radius: 0 !important; border-bottom: 2px solid transparent !important; transition: color 0.2s, border-color 0.2s !important; }",
+      "html header .main-nav .nav-link:hover, html header .main-nav .nav-link.active { color: #111827 !important; border-bottom: 2px solid #490B8A !important; background: transparent !important; }",
+      "html header.site-header-desktop .menu-trigger { font-family: 'Garet', 'Poppins', sans-serif !important; padding: 9px 15px !important; background: #F5ECFF !important; color: #490B8A !important; font-size: 14px !important; font-weight: 500 !important; line-height: 20px !important; border-radius: 200px !important; border: none !important; margin: 12px 0 !important; }",
+      "html header.site-header-desktop .menu-trigger .avatar { display: none !important; }",
+      "html header.site-header-desktop .menu-trigger svg:last-child { display: none !important; }",
+      "html header.site-header-desktop .menu-trigger::after { content: '' !important; margin: 4px 0 0 4px !important; border: 2px solid #490B8A !important; border-width: 2px 2px 0 0 !important; transform: rotate(135deg) !important; height: 5px !important; width: 5px !important; display: inline-block !important; vertical-align: top !important; position: relative !important; top: 2px !important; }",
+      "html header.site-header-mobile { background: #FFFFFF !important; border: none !important; box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.06), 0px 1px 3px 0px rgba(0,0,0,0.10) !important; }",
+      "html header.site-header-mobile .logo img { height: 24px !important; width: auto !important; }",
+      "html header.site-header-mobile button { background: transparent !important; border: none !important; color: #101114 !important; padding: 8px !important; }",
+      "html header.site-header-mobile button svg { color: #101114 !important; }",
+      "html main { background: #FFFFFF !important; }",
+      "html footer.footer { display: none !important; }",
+      "html h1.mb-4 { font-size: 32px !important; font-weight: 700 !important; color: #101114 !important; line-height: 54px !important; }",
+      "html .jump-nav a { display: flex !important; align-items: center !important; height: 45px !important; padding: 12px 18px !important; border-radius: 12px !important; font-size: 14px !important; font-weight: 400 !important; color: black !important; background: transparent !important; text-decoration: none !important; line-height: 20px !important; }",
+      "html .jump-nav a.vai-active { background: #F5ECFF !important; font-weight: 700 !important; }",
+      "html h2.section-heading { font-size: 22px !important; font-weight: 700 !important; color: black !important; }",
+      "html h2.section-heading + p { font-size: 12px !important; color: black !important; }",
+      "html .account-section .form-group { border: 1px solid #E7E7E7 !important; border-radius: 12px !important; padding: 16px !important; margin-bottom: 12px !important; }",
+      "html .account-section .form-group .d-flex { align-items: center !important; }",
+      "html .account-section .form-group h6 { font-size: 14px !important; font-weight: 400 !important; color: black !important; margin: 0 !important; flex: 1 !important; line-height: 1.55 !important; }",
+      "html .ml-3.btn.btn-link { background: #490B8A !important; color: white !important; border-radius: 100px !important; height: 35px !important; padding: 0 24px !important; font-size: 14px !important; font-weight: 700 !important; text-decoration: none !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; border: none !important; margin-left: 8px !important; }",
+      "html .ml-3.btn.btn-link:hover { background: #2B0157 !important; color: white !important; text-decoration: none !important; }",
+      "html .btn.btn-link svg { display: none !important; }",
+      "html .pgn__stateful-btn.btn-link { background: #490B8A !important; color: white !important; border-radius: 100px !important; height: 35px !important; padding: 0 24px !important; font-size: 14px !important; font-weight: 700 !important; text-decoration: none !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; border: none !important; margin-left: 8px !important; }",
+      "html .pgn__stateful-btn.btn-link:hover { background: #2B0157 !important; color: white !important; text-decoration: none !important; }",
+      "html .account-section .form-group p.text-truncate { background: white !important; border: 1px solid #E7E7E7 !important; border-radius: 10px !important; height: 45px !important; padding: 8px 16px !important; display: flex !important; align-items: center !important; font-size: 12px !important; color: #6D6D6D !important; margin-bottom: 0 !important; overflow: visible !important; text-overflow: unset !important; white-space: normal !important; }",
+      "html .account-section .form-group.vai-readonly p.text-truncate { background: #FAFAFA !important; }",
+      "html .account-section .form-group p.small.text-muted { font-size: 12px !important; color: #666D80 !important; margin-top: 6px !important; border: none !important; background: transparent !important; height: auto !important; padding: 0 !important; display: block !important; border-radius: 0 !important; }",
+      "html #delete-account > div { border: 1px solid #D80027 !important; border-radius: 12px !important; padding: 16px 26px !important; }",
+      "html #delete-account .section-heading { color: black !important; }",
+      "html #delete-account .text-danger { color: #D80027 !important; font-weight: 700 !important; }",
+      "html .btn.btn-outline-danger { color: #D80027 !important; border: 1px solid #D80027 !important; border-radius: 100px !important; height: 35px !important; padding: 0 24px !important; font-size: 14px !important; font-weight: 700 !important; background: transparent !important; }",
+      "html .btn.btn-outline-danger:hover { background: #FFF0F0 !important; }",
+      "html .account-section a.pgn__hyperlink { color: #490B8A !important; }",
+      "html .account-section a.pgn__hyperlink:hover { color: #2B0157 !important; }"
+    ].join('\\n');
+    document.head.appendChild(style);
+
+    function applyVaiAccount() {
+      var logoImg = document.querySelector('header .logo img');
+      if (logoImg && !logoImg.getAttribute('data-vai')) {
+        logoImg.setAttribute('data-vai', 'true');
+        logoImg.src = vaiDarkLogo;
+        logoImg.alt = 'VAI';
+      }
+      var formGroups = document.querySelectorAll('.account-section .form-group');
+      formGroups.forEach(function(fg) {
+        if (!fg.querySelector('.btn-link') && !fg.classList.contains('vai-readonly')) {
+          fg.classList.add('vai-readonly');
+        }
+      });
+      updateActiveNav();
+    }
+
+    function updateActiveNav() {
+      var jumpLinks = document.querySelectorAll('.jump-nav a');
+      if (!jumpLinks.length) return;
+      var hash = window.location.hash;
+      var matched = false;
+      jumpLinks.forEach(function(link) {
+        var linkHash = link.getAttribute('href').replace('/account/', '');
+        if (linkHash === hash) {
+          link.classList.add('vai-active');
+          matched = true;
+        } else {
+          link.classList.remove('vai-active');
+        }
+      });
+      if (!matched) jumpLinks[0].classList.add('vai-active');
+    }
+    window.addEventListener('hashchange', updateActiveNav);
+
+    var observer = new MutationObserver(function() { applyVaiAccount(); });
+    function startObserving() {
+      if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiAccount(); }
+    }
+    if (document.body) startObserving();
+    else document.addEventListener('DOMContentLoaded', startObserving);
+  })();
+}
+""",
+    )
+)
+
+
 # Include js file in lms main.html, main_django.html, and certificate.html
 hooks.Filters.ENV_PATCHES.add_items(
     [
