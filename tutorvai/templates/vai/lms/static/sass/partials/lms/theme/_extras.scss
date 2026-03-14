@@ -145,14 +145,18 @@ header.global-header .nav-links .secondary .dropdown-user-menu {
 
 .home .courses-container .courses .courses-listing {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 24px;
   padding: 0 0 40px;
+  max-width: 1200px;
+  margin: 0 auto;
   .courses-listing-item {
     margin: 0 !important;
-    width: 100%;
-    max-width: 900px;
+    width: calc(50% - 12px);
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 }
 
