@@ -79,6 +79,14 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
 )
 hooks.Filters.CONFIG_OVERRIDES.add_items(list(config["overrides"].items()))
 
+# Allow marketing site to receive redirects from Open edX after registration/login
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        'LOGIN_REDIRECT_WHITELIST = ["localhost:3000"]',
+    )
+)
+
 # Install openedx-atlas in the MFE base image (needed for pull_translations)
 hooks.Filters.ENV_PATCHES.add_item(
     (
