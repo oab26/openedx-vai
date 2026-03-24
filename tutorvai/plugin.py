@@ -83,7 +83,31 @@ hooks.Filters.CONFIG_OVERRIDES.add_items(list(config["overrides"].items()))
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-common-settings",
-        'LOGIN_REDIRECT_WHITELIST = ["localhost:3000"]',
+        'LOGIN_REDIRECT_WHITELIST.append("localhost:3000")',
+    )
+)
+
+# Enable bulk enrollment API for ecommerce
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        'FEATURES["ENABLE_BULK_ENROLLMENT_VIEW"] = True',
+    )
+)
+
+# Redirect LMS course discovery and homepage to marketing site
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+MKTG_URL_LINK_MAP = {
+    "ROOT": "http://localhost:3000",
+    "COURSES": "http://localhost:3000/courses",
+    "ABOUT": "http://localhost:3000/about",
+    "CONTACT": "http://localhost:3000/contact",
+}
+MKTG_URLS = {"ROOT": "http://localhost:3000"}
+""",
     )
 )
 
