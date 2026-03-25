@@ -201,7 +201,7 @@ if (process.env.APP_ID === 'learning') {{
 # Uses mfe-env-config-runtime-definitions (inside async setConfig try block)
 hooks.Filters.ENV_PATCHES.add_item(
     (
-        "mfe-env-config-buildtime-definitions",
+        "mfe-env-config-runtime-definitions",
         """
 if (process.env.APP_ID === 'authn') {
   (function() {
@@ -320,7 +320,7 @@ if (process.env.APP_ID === 'authn') {
 # VAI Discussions MFE styling — hide footer, swap logo
 hooks.Filters.ENV_PATCHES.add_item(
     (
-        "mfe-env-config-buildtime-definitions",
+        "mfe-env-config-runtime-definitions",
         """
 if (process.env.APP_ID === 'discussions') {
   (function() {
@@ -356,7 +356,7 @@ if (process.env.APP_ID === 'discussions') {
 # VAI Authoring (Studio) MFE styling — swap logo
 hooks.Filters.ENV_PATCHES.add_item(
     (
-        "mfe-env-config-buildtime-definitions",
+        "mfe-env-config-runtime-definitions",
         """
 if (process.env.APP_ID === 'authoring') {
   (function() {
