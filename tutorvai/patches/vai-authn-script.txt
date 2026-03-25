@@ -1,0 +1,127 @@
+(function() {
+  // Dynamically inject styles AFTER app CSS loads to win the cascade
+  var style = document.createElement('style');
+  style.id = 'vai-authn-styles';
+  style.textContent = [
+    'html body { font-family: "Poppins", sans-serif !important; }',
+
+    /* Left panel - use html prefix for higher specificity */
+    'html .bg-primary-400 { background-color: #490B8A !important; }',
+    'html .large-screen-svg-primary, html .medium-screen-svg-primary { display: none !important; }',
+    'html .extra-large-screen-top-stripe { display: none !important; }',
+    'html .large-yellow-line, html .medium-yellow-line, html .small-yellow-line { display: none !important; }',
+    'html .layout > .w-50 > .col-md-3 { display: none !important; }',
+    'html .layout > .w-50 > .col-md-9 { flex: 0 0 100% !important; max-width: 100% !important; }',
+    'html .layout > .w-50:first-child { display: flex !important; align-items: stretch !important; justify-content: center !important; }',
+    'html .layout > .w-50:first-child .col-md-9 { display: flex !important; flex-direction: column !important; justify-content: flex-start !important; min-height: 100vh !important; padding: 90px 90px 60px !important; }',
+
+    /* Logo container — column layout per Figma */
+    'html .layout .pgn__hyperlink { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; text-decoration: none !important; width: fit-content !important; }',
+
+    /* Logo */
+    'html img.logo, html img.logo-small { width: 70px !important; height: auto !important; position: relative !important; top: auto !important; left: auto !important; margin: 0 !important; }',
+    'html .logo.position-absolute { position: relative !important; }',
+    '#vai-brand-text, .vai-brand-text { color: white; font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; margin-bottom: 0; opacity: 1; width: 154px; line-height: 1.4; }',
+
+    /* Heading — positioned at ~36% from top per Figma (top: 372px of 1024px) */
+    'html .layout .w-50 h1, html .layout .w-50 .display-1 { font-family: "Poppins", sans-serif !important; font-weight: 800 !important; font-size: 50px !important; line-height: 70px !important; color: white !important; max-width: 538px !important; margin: 0 !important; margin-top: auto !important; margin-bottom: auto !important; }',
+    'html .text-accent-a { display: none !important; }',
+    '.vai-green-underline { position: relative; display: inline; background-image: linear-gradient(to right, #2DBE6C, #2DBE6C); background-position: bottom 2px left; background-repeat: no-repeat; background-size: 100% 6px; padding-bottom: 4px; }',
+
+    /* Medium screen */
+    '@media (min-width: 768px) and (max-width: 1199px) {',
+    '  html .w-100.p-0.mb-3.d-flex > .col-md-10.bg-primary-400 { background-color: #490B8A !important; }',
+    '  html .w-100.p-0.mb-3.d-flex > .col-md-2 { display: none !important; }',
+    '  html .w-100.p-0.mb-3.d-flex > .col-md-10 { flex: 0 0 100% !important; max-width: 100% !important; }',
+    '  html .medium-screen-top-stripe { display: none !important; }',
+    '}',
+
+    /* Small screen */
+    '@media (max-width: 767px) {',
+    '  html span.bg-primary-400 { background-color: #490B8A !important; padding: 20px 30px !important; display: block !important; }',
+    '  html .small-screen-top-stripe { display: none !important; }',
+    '  html span.bg-primary-400 .pgn__hyperlink { padding: 0 !important; }',
+    '}',
+
+    /* Right panel */
+    'html .content { max-width: 50% !important; padding: 0 2rem !important; }',
+    'html .mw-xs { max-width: 486px !important; margin: 0 auto !important; }',
+
+    /* Tabs */
+    'html #controlled-tab { border-bottom: 1px solid #dedede !important; margin-bottom: 24px !important; }',
+    'html #controlled-tab .nav-link { font-family: "Poppins", sans-serif !important; font-size: 16px !important; font-weight: 700 !important; color: #101114 !important; border: none !important; border-bottom: 2px solid transparent !important; padding: 10px 22px !important; background: transparent !important; }',
+    'html #controlled-tab .nav-link.active { border-bottom-color: #101114 !important; color: #101114 !important; }',
+    'html #controlled-tab .nav-link:hover { border-bottom-color: #999 !important; }',
+
+    /* Form inputs */
+    'html .pgn__form-group { margin-bottom: 16px !important; }',
+    'html .form-control, html .pgn__form-control-floating-label-content { border-radius: 10px !important; }',
+    'html .form-control { height: 55px !important; border: 1px solid #dfe1e7 !important; font-family: "Poppins", sans-serif !important; font-size: 14px !important; padding-left: 16px !important; }',
+    'html .form-control:focus { border-color: #490B8A !important; box-shadow: 0 0 0 1px #490B8A !important; }',
+    'html .pgn__form-label { font-family: "Poppins", sans-serif !important; font-weight: 500 !important; font-size: 14px !important; color: #271b11 !important; }',
+    'html select.form-control { height: 55px !important; border-radius: 10px !important; }',
+
+    /* Submit buttons */
+    'html .btn-brand { background-color: #490B8A !important; border-color: #490B8A !important; border-radius: 200px !important; height: 50px !important; font-family: "Poppins", sans-serif !important; font-weight: 600 !important; font-size: 16px !important; width: 100% !important; }',
+    'html .btn-brand:hover, html .btn-brand:focus { background-color: #3a0970 !important; border-color: #3a0970 !important; }',
+
+    /* Hide social login */
+    'html .btn-tpa { display: none !important; }',
+    'html [class*="btn-oa2-"] { display: none !important; }',
+    'html .mt-4.mb-3.h4 { display: none !important; }',
+    'html button.btn-link.btn-sm.text-body.p-0 { display: none !important; }',
+
+    /* Hide header/footer */
+    'html header, html footer, html .footer-container { display: none !important; }',
+
+    /* Layout */
+    'html .layout { min-height: 100vh !important; }',
+    'html .layout > .w-50 { min-height: 100vh !important; }',
+
+    /* Responsive */
+    '@media (max-width: 991px) {',
+    '  html .content { max-width: 100% !important; padding: 0 1.5rem !important; }',
+    '  html .layout > .w-50:first-child .col-md-9 { min-height: auto !important; padding: 40px 30px !important; }',
+    '  html .layout .w-50 h1, html .layout .w-50 .display-1 { font-size: 32px !important; line-height: 44px !important; margin-top: 20px !important; }',
+    '}'
+  ].join('\n');
+  document.head.appendChild(style);
+
+  // DOM manipulation
+  var vaiLogoBase64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02MS44MDQ3IDMxLjEyMjZINTUuOTE0OUw1My43MjQ4IDI1LjkwNDlMNDIuNzM1MSAyNS44ODYxTDQwLjYzNCAzMS4xMjI2SDM0Ljc4NjNMMzQuNjk0MiAzMC45NDY5TDQ0Ljk5NTUgNS4xODc4OEw0NS4yODEyIDUuMDQ1MTdDNDcuMjEwNiA1LjIzMzM2IDQ5LjU2IDQuODEzMDYgNTEuNDM3OSA1LjA0NTE3QzUxLjUzMTYgNS4wNTYxNCA1MS42MjgzIDUuMDQwNDYgNTEuNjkwOCA1LjEzNDU2TDYxLjgwNDcgMzEuMTIyNlpNNTEuOTAzMSAyMC44MzE1TDQ4LjQwMTcgMTEuMDU0OEw0NC41NjE1IDIwLjgzMTVINTEuOTAzMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02OS45OTk5IDMxLjAzNzlDNjguNzkxNyAzMS4wNTk5IDY3LjU3NzIgMzEuMDA5NyA2Ni4zNjg5IDMxLjAzNDhDNjYuMDE5MyAzMS4wNDI2IDY0LjM5NzMgMzEuMjgyNiA2NC4yMzE5IDMxLjAzOTVDNjQuMTgwNCAzMC45NzgzIDY0LjI4MTggMzAuOTMxMyA2NC4yODE4IDMwLjkwOTNWNS4wNTE0NEg2OS44NzM1TDcwLjAwMTUgNS4xODAwNFYzMS4wMzc5SDY5Ljk5OTlaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=';
+
+  function applyVaiBranding() {
+    // Apply to ALL h1 elements in any layout variant (large/medium/small)
+    var headings = document.querySelectorAll('.layout h1');
+    headings.forEach(function(heading) {
+      if (!heading.getAttribute('data-vai')) {
+        heading.setAttribute('data-vai', 'true');
+        heading.innerHTML = 'Shaping the<br/>Future of <span class="vai-green-underline">Veterinary</span> Medicine';
+      }
+    });
+
+    // Apply to ALL logo images (large=img.logo, small=img.logo-small)
+    var logos = document.querySelectorAll('img.logo, img.logo-small');
+    logos.forEach(function(logo) {
+      if (!logo.getAttribute('data-vai')) {
+        logo.setAttribute('data-vai', 'true');
+        logo.src = vaiLogoBase64;
+        logo.alt = 'VAI';
+      }
+      // Add brand text after each logo if not already present
+      if (logo.parentElement && !logo.parentElement.querySelector('#vai-brand-text, .vai-brand-text')) {
+        var brandText = document.createElement('div');
+        brandText.className = 'vai-brand-text';
+        brandText.id = 'vai-brand-text';
+        brandText.textContent = 'Veterinary Academy International';
+        logo.parentElement.insertBefore(brandText, logo.nextSibling);
+      }
+    });
+  }
+
+  // Keep observer running permanently — React swaps layout components on resize
+  var observer = new MutationObserver(function() {
+    applyVaiBranding();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
