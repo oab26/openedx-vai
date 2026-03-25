@@ -110,6 +110,16 @@ MKTG_URLS = {"ROOT": "{{ VAI_MARKETING_SITE_URL }}"}
     )
 )
 
+# Allow MFEs to load Garet fonts from LMS (cross-origin)
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "caddyfile-lms",
+        """
+        header /static/vai/fonts/* Access-Control-Allow-Origin *
+""",
+    )
+)
+
 # Install openedx-atlas in the MFE base image (needed for pull_translations)
 hooks.Filters.ENV_PATCHES.add_item(
     (
