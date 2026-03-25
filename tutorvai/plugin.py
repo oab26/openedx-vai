@@ -198,6 +198,8 @@ _vai_mfe_patches = {
     "learning": ("vai-learning-script.txt", "script"),
     "discussions": ("vai-discussions-script.txt", "script"),
     "authoring": ("vai-authoring-script.txt", "script"),
+    "profile": ("vai-profile-css.txt", "style"),
+    "account": ("vai-account-css.txt", "style"),
 }
 
 for _mfe_name, (_patch_file, _tag) in _vai_mfe_patches.items():
@@ -207,7 +209,8 @@ for _mfe_name, (_patch_file, _tag) in _vai_mfe_patches.items():
         hooks.Filters.ENV_PATCHES.add_item(
             (
                 f"mfe-dockerfile-post-npm-install-{_mfe_name}",
-                f"RUN echo '{_b64}' | base64 -d > /openedx/app/vai-inject.txt",
+                f"RUN echo '{_b64}' | base64 -d > /openedx/app/vai-inject.txt"
+                " && sed -i 's|__LMS_FONTS_BASE__|{% if ENABLE_HTTPS %}https://{{ LMS_HOST }}{% else %}http://{{ LMS_HOST }}{% endif %}/static/vai/fonts/|g' /openedx/app/vai-inject.txt",
             )
         )
         hooks.Filters.ENV_PATCHES.add_item(

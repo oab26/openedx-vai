@@ -1,0 +1,41 @@
+/* ===== VAI Profile MFE — Purple Theme Overrides ===== */
+
+/* Banner */
+html .profile-page-bg-banner {
+  background: #490B8A !important;
+  background-color: #490B8A !important;
+}
+
+/* Primary buttons (View My Records, Edit) */
+html .btn.btn-primary,
+html .btn-brand {
+  background-color: #490B8A !important;
+  border-color: #490B8A !important;
+  border-radius: 100px !important;
+}
+html .btn.btn-primary:hover,
+html .btn-brand:hover {
+  background-color: #2B0157 !important;
+  border-color: #2B0157 !important;
+}
+
+/* Link buttons (Add location, Add language, etc.) */
+html .btn.btn-link,
+html a.btn-link {
+  color: #490B8A !important;
+}
+html .btn.btn-link:hover,
+html a.btn-link:hover {
+  color: #2B0157 !important;
+}
+
+/* Headings */
+html .profile-page h1,
+html .profile-page h2 {
+  font-weight: 700 !important;
+}
+
+/* Hide default footer */
+html footer.footer {
+  display: none !important;
+}

@@ -1,0 +1,52 @@
+/* ===== VAI Account MFE — Purple Theme Overrides ===== */
+
+/* Sidebar active item highlight */
+html .nav-link.active,
+html .pgn__nav-item .nav-link.active {
+  border-left-color: #490B8A !important;
+  color: #490B8A !important;
+  font-weight: 700 !important;
+}
+
+/* Sidebar links */
+html .nav-link,
+html .pgn__nav-item .nav-link {
+  color: #490B8A !important;
+}
+html .nav-link:hover,
+html .pgn__nav-item .nav-link:hover {
+  color: #2B0157 !important;
+}
+
+/* Edit buttons */
+html .btn.btn-primary,
+html .btn-brand {
+  background-color: #490B8A !important;
+  border-color: #490B8A !important;
+  border-radius: 100px !important;
+}
+html .btn.btn-primary:hover,
+html .btn-brand:hover {
+  background-color: #2B0157 !important;
+  border-color: #2B0157 !important;
+}
+
+/* Links */
+html a {
+  color: #490B8A;
+}
+html a:hover {
+  color: #2B0157;
+}
+
+/* Form focus states */
+html .form-control:focus,
+html .pgn__form-control:focus {
+  border-color: #490B8A !important;
+  box-shadow: 0 0 0 1px #490B8A !important;
+}
+
+/* Hide default footer */
+html footer.footer {
+  display: none !important;
+}

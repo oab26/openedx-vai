@@ -1,8 +1,8 @@
 /* ===== GARET FONT — match LMS theme ===== */
-@font-face { font-family: 'Garet'; src: url('/learner-dashboard/Garet-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Garet'; src: url('/learner-dashboard/Garet-Regular.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Garet'; src: url('/learner-dashboard/Garet-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Garet'; src: url('/learner-dashboard/Garet-ExtraBold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Garet'; src: url('__LMS_FONTS_BASE__Garet-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Garet'; src: url('__LMS_FONTS_BASE__Garet-Regular.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Garet'; src: url('__LMS_FONTS_BASE__Garet-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Garet'; src: url('__LMS_FONTS_BASE__Garet-ExtraBold.otf') format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
 
 html body {
   font-family: 'Garet', 'Poppins', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
