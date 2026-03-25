@@ -22,6 +22,7 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
         "WELCOME_MESSAGE": "Learn. Specialize. Excel.",
         "PRIMARY_COLOR": "#490B8A",
         "ENABLE_DARK_TOGGLE": True,
+        "MARKETING_SITE_URL": "http://localhost:3000",
         "FOOTER_NAV_LINKS": [
             {"title": "About Us", "url": "/about"},
             {"title": "Programs", "url": "/programs"},
@@ -44,7 +45,6 @@ hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
 hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
     [
         ("vai", "build/openedx/themes"),
-        ("vai/env.config.jsx", "plugins/mfe/build/mfe"),
     ],
 )
 
@@ -83,7 +83,7 @@ hooks.Filters.CONFIG_OVERRIDES.add_items(list(config["overrides"].items()))
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-common-settings",
-        'LOGIN_REDIRECT_WHITELIST.append("localhost:3000")',
+        'LOGIN_REDIRECT_WHITELIST.append("{{ VAI_MARKETING_SITE_URL.replace("https://", "").replace("http://", "") }}")',
     )
 )
 
@@ -101,12 +101,12 @@ hooks.Filters.ENV_PATCHES.add_item(
         "openedx-lms-common-settings",
         """
 MKTG_URL_LINK_MAP = {
-    "ROOT": "http://localhost:3000",
-    "COURSES": "http://localhost:3000/courses",
-    "ABOUT": "http://localhost:3000/about",
-    "CONTACT": "http://localhost:3000/contact",
+    "ROOT": "{{ VAI_MARKETING_SITE_URL }}",
+    "COURSES": "{{ VAI_MARKETING_SITE_URL }}/courses",
+    "ABOUT": "{{ VAI_MARKETING_SITE_URL }}/about",
+    "CONTACT": "{{ VAI_MARKETING_SITE_URL }}/contact",
 }
-MKTG_URLS = {"ROOT": "http://localhost:3000"}
+MKTG_URLS = {"ROOT": "{{ VAI_MARKETING_SITE_URL }}"}
 """,
     )
 )
