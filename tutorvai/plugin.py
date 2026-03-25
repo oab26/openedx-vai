@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import os
 import typing as t
-from glob import glob
 
 import importlib_resources
 from tutor import hooks
 from tutor.__about__ import __version_suffix__
-from tutormfe.hooks import PLUGIN_SLOTS
+# PLUGIN_SLOTS not used — Indigo disabled, VAI handles styling via Dockerfile patches
 
 from .__about__ import __version__
 
@@ -262,45 +261,5 @@ MFE_CONFIG['INDIGO_FOOTER_NAV_LINKS'] = {{ VAI_FOOTER_NAV_LINKS }}
 )
 
 
-# Apply patches from tutor-vai
-for path in glob(
-    os.path.join(
-        str(importlib_resources.files("tutorvai") / "patches"),
-        "*",
-    )
-):
-    with open(path, encoding="utf-8") as patch_file:
-        hooks.Filters.ENV_PATCHES.add_item((os.path.basename(path), patch_file.read()))
-
-
-for mfe in vai_styled_mfes:
-    PLUGIN_SLOTS.add_item(
-        (
-            mfe,
-            "footer_slot",
-            """
-            {
-                op: PLUGIN_OPERATIONS.Hide,
-                widgetId: 'default_contents',
-            },
-            {
-                op: PLUGIN_OPERATIONS.Insert,
-                widget: {
-                    id: 'default_contents',
-                    type: DIRECT_PLUGIN,
-                    priority: 1,
-                    RenderWidget: <IndigoFooter />,
-                },
-            },
-            {
-                op: PLUGIN_OPERATIONS.Insert,
-                widget: {
-                    id: 'read_theme_cookie',
-                    type: DIRECT_PLUGIN,
-                    priority: 2,
-                    RenderWidget: AddDarkTheme,
-                },
-            },
-  """,
-        ),
-    )
+# No PLUGIN_SLOTS needed — VAI CSS hides default footer and handles all styling
+# Indigo plugin is disabled; all MFE theming is done via post-build CSS/JS injection
