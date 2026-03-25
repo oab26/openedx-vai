@@ -168,7 +168,7 @@ if _dashboard_css:
     _escaped_css = _dashboard_css.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
     hooks.Filters.ENV_PATCHES.add_item(
         (
-            "mfe-env-config-runtime-definitions",
+            "mfe-env-config-buildtime-definitions",
             f"""
 if (process.env.APP_ID === 'learner-dashboard') {{
   (function() {{
@@ -187,7 +187,7 @@ _learning_js = _load_patch("vai-learning-js.txt")
 if _learning_js:
     hooks.Filters.ENV_PATCHES.add_item(
         (
-            "mfe-env-config-runtime-definitions",
+            "mfe-env-config-buildtime-definitions",
             f"""
 if (process.env.APP_ID === 'learning') {{
   {_learning_js}
@@ -198,10 +198,10 @@ if (process.env.APP_ID === 'learning') {{
 
 
 # VAI Authn MFE styling — Register/Sign-in page overrides
-# Uses mfe-env-config-runtime-definitions (inside async setConfig try block)
+# Uses mfe-env-config-buildtime-definitions (module-level, safe for DOM APIs)
 hooks.Filters.ENV_PATCHES.add_item(
     (
-        "mfe-env-config-runtime-definitions",
+        "mfe-env-config-buildtime-definitions",
         """
 if (process.env.APP_ID === 'authn') {
   (function() {
@@ -320,7 +320,7 @@ if (process.env.APP_ID === 'authn') {
 # VAI Discussions MFE styling — hide footer, swap logo
 hooks.Filters.ENV_PATCHES.add_item(
     (
-        "mfe-env-config-runtime-definitions",
+        "mfe-env-config-buildtime-definitions",
         """
 if (process.env.APP_ID === 'discussions') {
   (function() {
@@ -356,7 +356,7 @@ if (process.env.APP_ID === 'discussions') {
 # VAI Authoring (Studio) MFE styling — swap logo
 hooks.Filters.ENV_PATCHES.add_item(
     (
-        "mfe-env-config-runtime-definitions",
+        "mfe-env-config-buildtime-definitions",
         """
 if (process.env.APP_ID === 'authoring') {
   (function() {
