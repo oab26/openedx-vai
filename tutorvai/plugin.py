@@ -129,8 +129,18 @@ vai_styled_mfes = [
 ]
 
 
-# Indigo plugin already installs npm packages and imports IndigoFooter for these MFEs.
-# VAI only needs to add CSS/JS overrides via buildtime-definitions patches (below).
+# Install Indigo npm packages for styled MFEs (header, footer, brand)
+for mfe in vai_styled_mfes:
+    hooks.Filters.ENV_PATCHES.add_item(
+        (
+            f"mfe-dockerfile-post-npm-install-{mfe}",
+            """
+RUN npm install @edly-io/indigo-frontend-component-footer@^3.0.0
+RUN npm install '@edx/frontend-component-header@npm:@edly-io/indigo-frontend-component-header@^4.0.0'
+RUN npm install '@edx/brand@npm:@edly-io/indigo-brand-openedx@^2.2.2'
+""",
+        ),
+    )
 
 
 hooks.Filters.ENV_PATCHES.add_item(
@@ -139,6 +149,52 @@ hooks.Filters.ENV_PATCHES.add_item(
         "RUN npm install '@edx/brand@npm:@edly-io/indigo-brand-openedx@^2.2.2'",
     )
 )
+
+# Load VAI MFE CSS/JS patches from files
+_patches_dir = str(importlib_resources.files("tutorvai") / "patches")
+
+
+def _load_patch(filename: str) -> str:
+    filepath = os.path.join(_patches_dir, filename)
+    if os.path.exists(filepath):
+        with open(filepath, encoding="utf-8") as f:
+            return f.read()
+    return ""
+
+
+# VAI Learner Dashboard MFE styling — full CSS override
+_dashboard_css = _load_patch("vai-dashboard-css.txt")
+if _dashboard_css:
+    _escaped_css = _dashboard_css.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
+    hooks.Filters.ENV_PATCHES.add_item(
+        (
+            "mfe-env-config-buildtime-definitions",
+            f"""
+if (process.env.APP_ID === 'learner-dashboard') {{
+  (function() {{
+    var style = document.createElement('style');
+    style.id = 'vai-dashboard-styles';
+    style.textContent = `{_escaped_css}`;
+    document.head.appendChild(style);
+  }})();
+}}
+""",
+        )
+    )
+
+# VAI Learning MFE styling — logo swap + footer hide
+_learning_js = _load_patch("vai-learning-js.txt")
+if _learning_js:
+    hooks.Filters.ENV_PATCHES.add_item(
+        (
+            "mfe-env-config-buildtime-definitions",
+            f"""
+if (process.env.APP_ID === 'learning') {{
+  {_learning_js}
+}}
+""",
+        )
+    )
 
 
 # VAI Authn MFE styling — Register/Sign-in page overrides
