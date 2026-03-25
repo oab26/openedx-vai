@@ -129,26 +129,8 @@ vai_styled_mfes = [
 ]
 
 
-for mfe in vai_styled_mfes:
-    hooks.Filters.ENV_PATCHES.add_items(
-        [
-            (
-                f"mfe-dockerfile-post-npm-install-{mfe}",
-                """
-RUN npm install @edly-io/indigo-frontend-component-footer@^3.0.0
-RUN npm install '@edx/frontend-component-header@npm:@edly-io/indigo-frontend-component-header@^4.0.0'
-RUN npm install '@edx/brand@npm:@edly-io/indigo-brand-openedx@^2.2.2'
-
-""",
-            ),
-            (
-                f"mfe-env-config-runtime-definitions-{mfe}",
-                """
-const { default: IndigoFooter } = await import('@edly-io/indigo-frontend-component-footer');
-""",
-            ),
-        ]
-    )
+# Indigo plugin already installs npm packages and imports IndigoFooter for these MFEs.
+# VAI only needs to add CSS/JS overrides via buildtime-definitions patches (below).
 
 
 hooks.Filters.ENV_PATCHES.add_item(
