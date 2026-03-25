@@ -182,9 +182,9 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "mfe-lms-common-settings",
         """
-MFE_CONFIG["LOGO_URL"] = "https://{{ LMS_HOST }}/static/vai/images/vai-logo-dark.svg"
-MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://{{ LMS_HOST }}/static/vai/images/vai-logo-dark.svg"
-MFE_CONFIG["LOGO_WHITE_URL"] = "https://{{ LMS_HOST }}/static/vai/images/vai-logo-white.svg"
+MFE_CONFIG["LOGO_URL"] = "https://{{ LMS_HOST }}/static/vai/images/logo.svg"
+MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://{{ LMS_HOST }}/static/vai/images/logo.svg"
+MFE_CONFIG["LOGO_WHITE_URL"] = "https://{{ LMS_HOST }}/static/vai/images/logo-white.svg"
 """,
     )
 )
@@ -214,7 +214,7 @@ for _mfe_name, (_patch_file, _tag) in _vai_mfe_patches.items():
         hooks.Filters.ENV_PATCHES.add_item(
             (
                 f"mfe-dockerfile-post-npm-build-{_mfe_name}",
-                f"""RUN node -e "var fs=require('fs'),c=fs.readFileSync('/openedx/app/vai-inject.txt','utf8'),h=fs.readFileSync('/openedx/app/dist/index.html','utf8');h=h.replace('</head>','<{_tag}>'+c+'</{_tag}></head>');fs.writeFileSync('/openedx/app/dist/index.html',h);" """,
+                f"""RUN node -e "var fs=require('fs'),c=fs.readFileSync('/openedx/app/vai-inject.txt','utf8'),h=fs.readFileSync('/openedx/app/dist/index.html','utf8');h=h.replace('</body>','<{_tag}>'+c+'</{_tag}></body>');fs.writeFileSync('/openedx/app/dist/index.html',h);" """,
             )
         )
 
