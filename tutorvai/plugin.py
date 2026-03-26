@@ -139,6 +139,15 @@ hooks.Filters.ENV_PATCHES.add_item(
     )
 )
 
+# Fix fedx-scripts missing for broken MFEs (learner-record, communications, ora-grading)
+for _broken_mfe in ["learner-record", "communications", "ora-grading"]:
+    hooks.Filters.ENV_PATCHES.add_item(
+        (
+            f"mfe-dockerfile-pre-npm-build-{_broken_mfe}",
+            "RUN npm install @edx/frontend-build --no-save || true",
+        )
+    )
+
 # MFEs that are styled using Indigo packages (Phase 1: reuse Indigo MFE npm packages)
 vai_styled_mfes = [
     "learning",
