@@ -97,6 +97,17 @@ SERVER_EMAIL = "noreply@updates.bytecrew.net"
     )
 )
 
+# Enable certificates and badges
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+FEATURES["BADGES_ENABLED"] = True
+FEATURES["CERTIFICATES_HTML_VIEW"] = True
+""",
+    )
+)
+
 # Enable bulk enrollment API for ecommerce
 hooks.Filters.ENV_PATCHES.add_item(
     (
