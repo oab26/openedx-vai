@@ -140,11 +140,13 @@ hooks.Filters.ENV_PATCHES.add_item(
 )
 
 # Fix fedx-scripts missing for broken MFEs (learner-record, communications, ora-grading)
+# These MFEs fail npm clean-install due to cached/corrupt node_modules.
+# Force reinstall of frontend-build which provides fedx-scripts.
 for _broken_mfe in ["learner-record", "communications", "ora-grading"]:
     hooks.Filters.ENV_PATCHES.add_item(
         (
-            f"mfe-dockerfile-pre-npm-build-{_broken_mfe}",
-            "RUN npm install @edx/frontend-build --no-save || true",
+            f"mfe-dockerfile-post-npm-install-{_broken_mfe}",
+            "RUN npm ls @openedx/frontend-build 2>/dev/null || npm ls @edx/frontend-build 2>/dev/null || npm install @openedx/frontend-build --no-save",
         )
     )
 
