@@ -86,6 +86,17 @@ hooks.Filters.ENV_PATCHES.add_item(
     )
 )
 
+# Email sender configuration (Resend SMTP)
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+DEFAULT_FROM_EMAIL = "VAI - Veterinary Academy International <noreply@updates.bytecrew.net>"
+SERVER_EMAIL = "noreply@updates.bytecrew.net"
+""",
+    )
+)
+
 # Enable bulk enrollment API for ecommerce
 hooks.Filters.ENV_PATCHES.add_item(
     (
