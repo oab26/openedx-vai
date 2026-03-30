@@ -97,6 +97,20 @@ SERVER_EMAIL = "noreply@updates.bytecrew.net"
     )
 )
 
+# VdoCipher API secret for DRM video XBlock
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        'VDOCIPHER_API_SECRET = "UmZ8NbxT77Kne1lO4w7mjJB6bJv3er98wdHMbmiOgbqBJBv5TJEBHsO4PB3W77LV"',
+    )
+)
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-cms-common-settings",
+        'VDOCIPHER_API_SECRET = "UmZ8NbxT77Kne1lO4w7mjJB6bJv3er98wdHMbmiOgbqBJBv5TJEBHsO4PB3W77LV"',
+    )
+)
+
 # Enable certificates and badges
 hooks.Filters.ENV_PATCHES.add_item(
     (
