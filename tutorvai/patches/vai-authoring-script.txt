@@ -1,5 +1,7 @@
 (function() {
+  // ─── VAI Logo Injection ───
   var vaiDarkLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNDUiIHZpZXdCb3g9IjAgMCA3MCA0NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIwMDFfMTYxOSkiPgo8cGF0aCBkPSJNMCAxMi4wODM4QzQuMDk3NzIgMTIuMzExMiA5LjA0NDY0IDEyLjg5OTMgMTEuODYyMyAxNi4yNDZDMTQuNDA1MiAxOS4yNjY2IDE2LjU0ODUgMjcuMTgzMyAxOS44MDQ5IDI4LjU5MTZDMjEuNTkwNyAyOS4zNjQ3IDIzLjY0MDMgMjguOTA1MiAyNS4yMjYzIDI3Ljg2N0MyNS4zMzU2IDI3Ljc5NjUgMjUuNDc5MiAyNy44MDEyIDI1LjQzNzEgMjcuNjA2N0MyMy41NDUxIDI4LjEzMDUgMjEuMTgzMyAyNy4xNDg4IDIwLjE5NTEgMjUuNDU1QzE5LjAwMjUgMjMuNDExNSAxOS42MTYgMjEuNjcwNyAyMC40OTk1IDE5LjY4NTNDMjIuMTAxMiAxNi4wODE0IDI0LjAxODEgMTIuMjQzOCAyNS43ODk5IDguNzA1NzRDMjguODEyIDIuNjc0MTEgMzIuNzMzNCAwLjMwMTI5OSAzOS40ODAyIDAuMDc3MDM0N0MzOS42ODk0IDAuMDcwNzYxNSAzOS44ODQ1IC0wLjExNTg2NCA0MC4wMzQzIDAuMTE5Mzc4TDIwLjM1MjggNDIuOTUyNEMxOS4wMDg3IDQ1LjMwNjQgMTUuNDMwOCA0NS4wMjcyIDE0LjE1MzkgNDIuNzYxTDAgMTIuMDgzOFoiIGZpbGw9IiM0OTBCOEEiLz4KPHBhdGggZD0iTTYxLjgwNDcgMzEuMTIyNkg1NS45MTQ5TDUzLjcyNDggMjUuOTA0OUw0Mi43MzUxIDI1Ljg4NjFMNDAuNjM0IDMxLjEyMjZIMzQuNzg2M0wzNC42OTQyIDMwLjk0NjlMNDQuOTk1NSA1LjE4Nzg4TDQ1LjI4MTIgNS4wNDUxN0M0Ny4yMTA2IDUuMjMzMzYgNDkuNTYgNC44MTMwNiA1MS40Mzc5IDUuMDQ1MTdDNTEuNTMxNiA1LjA1NjE0IDUxLjYyODMgNS4wNDA0NiA1MS42OTA4IDUuMTM0NTZMNjEuODA0NyAzMS4xMjI2Wk01MS45MDMxIDIwLjgzMTVMNDguNDAxNyAxMS4wNTQ4TDQ0LjU2MTUgMjAuODMxNUg1MS45MDMxWiIgZmlsbD0iIzQ5MEI4QSIvPgo8cGF0aCBkPSJNNjkuOTk5OSAzMS4wMzc5QzY4Ljc5MTcgMzEuMDU5OSA2Ny41NzcyIDMxLjAwOTcgNjYuMzY4OSAzMS4wMzQ4QzY2LjAxOTMgMzEuMDQyNiA2NC4zOTczIDMxLjI4MjYgNjQuMjMxOSAzMS4wMzk1QzY0LjE4MDQgMzAuOTc4MyA2NC4yODE4IDMwLjkzMTMgNjQuMjgxOCAzMC45MDkzVjUuMDUxNDRINjkuODczNUw3MC4wMDE1IDUuMTgwMDRWMzEuMDM3OUg2OS45OTk5WiIgZmlsbD0iIzQ5MEI4QSIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIwMDFfMTYxOSI+CjxyZWN0IHdpZHRoPSI3MCIgaGVpZ2h0PSI0NC41OTI2IiBmaWxsPSIjNDkwQjhBIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==';
+
   function applyVaiLogo() {
     var imgs = document.querySelectorAll('img.logo, header a img, header a[href*="/home"] img');
     imgs.forEach(function(logo) {
@@ -10,10 +12,210 @@
       }
     });
   }
-  var observer = new MutationObserver(function() { applyVaiLogo(); });
-  function startObserving() {
-    if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); applyVaiLogo(); }
+
+  // ─── Course Approval System ───
+  var VAI_IS_ADMIN = null;
+  var VAI_CHANGES_CACHE = {};
+  var VAI_CHECKING = false;
+
+  function getCourseKeyFromUrl() {
+    var match = window.location.pathname.match(/course-v1:[^/]+/);
+    return match ? match[0] : null;
   }
+
+  function getCmsBaseUrl() {
+    var origin = window.location.origin;
+    if (origin.indexOf('apps.local.openedx.io') !== -1) {
+      return 'http://studio.local.openedx.io:8001';
+    }
+    return origin.replace('apps.', 'studio.').replace(/\/authoring.*/, '');
+  }
+
+  function cmsFetch(path, method, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open(method || 'GET', getCmsBaseUrl() + path, true);
+    xhr.withCredentials = true;
+    if (method === 'POST') xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        try { callback(xhr.status, JSON.parse(xhr.responseText)); }
+        catch(e) { callback(xhr.status, {}); }
+      }
+    };
+    xhr.onerror = function() { callback(0, {}); };
+    xhr.send(method === 'POST' ? '{}' : null);
+  }
+
+  function checkIfAdmin(callback) {
+    if (VAI_IS_ADMIN !== null) return callback(VAI_IS_ADMIN);
+    var courseKey = getCourseKeyFromUrl();
+    if (!courseKey) return callback(false);
+    cmsFetch('/export/' + courseKey, 'GET', function(status) {
+      VAI_IS_ADMIN = (status !== 403);
+      callback(VAI_IS_ADMIN);
+    });
+  }
+
+  // ─── Hide Publish/Discard/Export/AdvancedSettings for non-admin ───
+  function hideRestrictedElements() {
+    // Hide Publish buttons
+    document.querySelectorAll('button').forEach(function(btn) {
+      var text = btn.textContent.trim();
+      if (text === 'Publish' || text === 'Discard changes') {
+        btn.style.display = 'none';
+      }
+    });
+
+    // Hide Export and Advanced Settings links in dropdown menus
+    document.querySelectorAll('a[href*="/export"], a[href*="/settings/advanced"]').forEach(function(link) {
+      link.style.display = 'none';
+    });
+  }
+
+  // ─── Access Restricted banner on blocked pages ───
+  function showBlockedBanner() {
+    var path = window.location.pathname;
+    var isBlocked = path.indexOf('/settings/advanced') !== -1 || path.indexOf('/export') !== -1;
+
+    var existing = document.getElementById('vai-blocked-banner');
+    if (!isBlocked) {
+      if (existing) existing.remove();
+      return;
+    }
+    if (existing) return;
+
+    var target = document.querySelector('article, main, [role="main"]');
+    if (!target) return;
+
+    var banner = document.createElement('div');
+    banner.id = 'vai-blocked-banner';
+    banner.style.cssText = 'background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px 20px;margin:20px;display:flex;align-items:center;gap:12px;';
+    banner.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="#dc2626"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>'
+      + '<div><strong style="color:#991b1b;font-size:14px;">Access Restricted</strong>'
+      + '<p style="color:#b91c1c;font-size:13px;margin:4px 0 0;">This section requires administrator privileges. Contact the VAI admin team if you need changes made here.</p></div>';
+    target.insertBefore(banner, target.firstChild);
+  }
+
+  // ─── Notify Admin Button ───
+  function injectNotifyButton() {
+    var courseKey = getCourseKeyFromUrl();
+    if (!courseKey) return;
+    if (window.location.pathname.indexOf('/authoring/course/') === -1) return;
+
+    // Check if container still in DOM
+    var existing = document.getElementById('vai-notify-container');
+    if (existing && document.body.contains(existing)) return;
+
+    var header = document.querySelector('header');
+    if (!header) return;
+
+    // Create container
+    var container = document.createElement('div');
+    container.id = 'vai-notify-container';
+    container.style.cssText = 'background:#f8f4ff;border-bottom:1px solid #e9d5ff;padding:8px 24px;display:flex;align-items:center;justify-content:flex-end;gap:12px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:40px;';
+
+    // Status text
+    var statusEl = document.createElement('span');
+    statusEl.id = 'vai-notify-status';
+    statusEl.style.cssText = 'font-size:13px;color:#6b7280;margin-right:auto;';
+    statusEl.textContent = 'Checking for changes...';
+
+    // Button
+    var btn = document.createElement('button');
+    btn.id = 'vai-notify-btn';
+    btn.textContent = 'Notify Admin for Review';
+    btn.style.cssText = 'background:#490B8A;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:13px;font-weight:600;cursor:pointer;display:none;';
+    btn.onmouseenter = function() { if (!btn.disabled) btn.style.background = '#2B0157'; };
+    btn.onmouseleave = function() { if (!btn.disabled) btn.style.background = '#490B8A'; };
+    btn.onclick = function() {
+      btn.disabled = true;
+      btn.textContent = 'Notifying...';
+      btn.style.background = '#7c3aed';
+      cmsFetch('/api/course-approval/notify/' + courseKey + '/', 'POST', function(status, data) {
+        if (status === 200) {
+          btn.textContent = 'Admin Notified \u2713';
+          btn.style.background = '#6b7280';
+          btn.style.cursor = 'default';
+          statusEl.textContent = 'Admin has been notified. They will review and publish your changes.';
+          statusEl.style.color = '#059669';
+        } else {
+          btn.textContent = 'Error — Try Again';
+          btn.style.background = '#dc2626';
+          btn.disabled = false;
+        }
+      });
+    };
+
+    container.appendChild(statusEl);
+    container.appendChild(btn);
+    header.parentNode.insertBefore(container, header.nextSibling);
+
+    // Check for changes
+    loadNotifyState(courseKey, statusEl, btn);
+  }
+
+  function loadNotifyState(courseKey, statusEl, btn) {
+    cmsFetch('/api/course-approval/has-changes/' + courseKey + '/', 'GET', function(status, data) {
+      if (status !== 200) {
+        statusEl.textContent = '';
+        btn.style.display = 'none';
+        return;
+      }
+
+      if (data.has_unpublished_changes && !data.notification_active) {
+        // Has changes, not yet notified → show active button
+        statusEl.textContent = 'You have unpublished changes.';
+        statusEl.style.color = '#92400e';
+        btn.style.display = 'inline-block';
+        btn.disabled = false;
+        btn.textContent = 'Notify Admin for Review';
+        btn.style.background = '#490B8A';
+        btn.style.cursor = 'pointer';
+      } else if (data.has_unpublished_changes && data.notification_active) {
+        // Has changes, already notified → show disabled button
+        statusEl.textContent = 'Admin has been notified. They will review and publish your changes.';
+        statusEl.style.color = '#059669';
+        btn.style.display = 'inline-block';
+        btn.disabled = true;
+        btn.textContent = 'Admin Notified \u2713';
+        btn.style.background = '#6b7280';
+        btn.style.cursor = 'default';
+      } else {
+        // No changes → hide everything
+        statusEl.textContent = '';
+        btn.style.display = 'none';
+      }
+    });
+  }
+
+  // ─── Main Logic ───
+  function applyApprovalUI() {
+    var courseKey = getCourseKeyFromUrl();
+    if (!courseKey) return;
+    if (window.location.pathname.indexOf('/authoring/course/') === -1) return;
+
+    checkIfAdmin(function(isAdmin) {
+      if (isAdmin) return;
+      hideRestrictedElements();
+      showBlockedBanner();
+      injectNotifyButton();
+    });
+  }
+
+  // ─── Observer ───
+  var observer = new MutationObserver(function() {
+    applyVaiLogo();
+    applyApprovalUI();
+  });
+
+  function startObserving() {
+    if (document.body) {
+      observer.observe(document.body, { childList: true, subtree: true });
+      applyVaiLogo();
+      applyApprovalUI();
+    }
+  }
+
   if (document.body) startObserving();
   else document.addEventListener('DOMContentLoaded', startObserving);
 })();

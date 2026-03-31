@@ -111,6 +111,25 @@ hooks.Filters.ENV_PATCHES.add_item(
     )
 )
 
+# Course Approval Workflow — register middleware + admin email
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-cms-common-settings",
+        """
+MIDDLEWARE.append('course_approval.middleware.CourseApprovalMiddleware')
+COURSE_APPROVAL_ADMIN_EMAIL = 'omer@bytecrew.ae'
+""",
+    )
+)
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+COURSE_APPROVAL_ADMIN_EMAIL = 'omer@bytecrew.ae'
+""",
+    )
+)
+
 # Enable certificates and badges
 hooks.Filters.ENV_PATCHES.add_item(
     (
