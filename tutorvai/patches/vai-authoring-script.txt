@@ -97,6 +97,8 @@
   }
 
   // ─── Notify Admin Button ───
+  var VAI_NOTIFY_LOADING = false;
+
   function injectNotifyButton() {
     var courseKey = getCourseKeyFromUrl();
     if (!courseKey) return;
@@ -105,6 +107,10 @@
     // Check if container still in DOM
     var existing = document.getElementById('vai-notify-container');
     if (existing && document.body.contains(existing)) return;
+
+    // Prevent concurrent API calls while loading
+    if (VAI_NOTIFY_LOADING) return;
+    VAI_NOTIFY_LOADING = true;
 
     var header = document.querySelector('header');
     if (!header) return;
@@ -151,11 +157,14 @@
     header.parentNode.insertBefore(container, header.nextSibling);
 
     // Check for changes
-    loadNotifyState(courseKey, statusEl, btn);
+    loadNotifyState(courseKey, statusEl, btn, function() {
+      VAI_NOTIFY_LOADING = false;
+    });
   }
 
-  function loadNotifyState(courseKey, statusEl, btn) {
+  function loadNotifyState(courseKey, statusEl, btn, onDone) {
     cmsFetch('/api/course-approval/has-changes/' + courseKey + '/', 'GET', function(status, data) {
+      if (onDone) onDone();
       if (status !== 200) {
         statusEl.textContent = '';
         btn.style.display = 'none';
