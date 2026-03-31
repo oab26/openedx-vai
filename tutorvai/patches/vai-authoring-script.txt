@@ -15,8 +15,6 @@
 
   // ─── Course Approval System ───
   var VAI_IS_ADMIN = null;
-  var VAI_CHANGES_CACHE = {};
-  var VAI_CHECKING = false;
 
   function getCourseKeyFromUrl() {
     var match = window.location.pathname.match(/course-v1:[^/]+/);
@@ -31,42 +29,25 @@
     return origin.replace('apps.', 'studio.').replace(/\/authoring.*/, '');
   }
 
-  function cmsFetch(path, method, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(method || 'GET', getCmsBaseUrl() + path, true);
-    xhr.withCredentials = true;
-    if (method === 'POST') xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        try { callback(xhr.status, JSON.parse(xhr.responseText)); }
-        catch(e) { callback(xhr.status, {}); }
-      }
-    };
-    xhr.onerror = function() { callback(0, {}); };
-    xhr.send(method === 'POST' ? '{}' : null);
-  }
-
   function checkIfAdmin(callback) {
     if (VAI_IS_ADMIN !== null) return callback(VAI_IS_ADMIN);
     var courseKey = getCourseKeyFromUrl();
     if (!courseKey) return callback(false);
-    cmsFetch('/export/' + courseKey, 'GET', function(status) {
-      VAI_IS_ADMIN = (status !== 403);
-      callback(VAI_IS_ADMIN);
-    });
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', getCmsBaseUrl() + '/export/' + courseKey, true);
+    xhr.withCredentials = true;
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        VAI_IS_ADMIN = (xhr.status !== 403);
+        callback(VAI_IS_ADMIN);
+      }
+    };
+    xhr.onerror = function() { callback(false); };
+    xhr.send();
   }
 
-  // ─── Hide Publish/Discard/Export/AdvancedSettings for non-admin ───
-  function hideRestrictedElements() {
-    // Hide Publish buttons
-    document.querySelectorAll('button').forEach(function(btn) {
-      var text = btn.textContent.trim();
-      if (text === 'Publish' || text === 'Discard changes') {
-        btn.style.display = 'none';
-      }
-    });
-
-    // Hide Export and Advanced Settings links in dropdown menus
+  // ─── Hide restricted menu items ───
+  function hideRestrictedMenuItems() {
     document.querySelectorAll('a[href*="/export"], a[href*="/settings/advanced"]').forEach(function(link) {
       link.style.display = 'none';
     });
@@ -96,105 +77,139 @@
     target.insertBefore(banner, target.firstChild);
   }
 
-  // ─── Notify Admin Button ───
-  var VAI_NOTIFY_LOADING = false;
+  // ─── Get current username from header ───
+  function getCurrentUsername() {
+    // The authoring MFE shows username in the header button like "admin admin" or "instructor1 instructor1"
+    var userBtn = document.querySelector('header button[class*="user"], header button[aria-label*="Account"]');
+    if (userBtn) {
+      var text = userBtn.textContent.trim().split(/\s+/)[0];
+      if (text) return text.toLowerCase();
+    }
+    // Fallback: check for username in nav
+    var navLinks = document.querySelectorAll('header button, header a');
+    for (var i = 0; i < navLinks.length; i++) {
+      var el = navLinks[i];
+      if (el.querySelector('img[alt]') && el.textContent.trim()) {
+        return el.textContent.trim().split(/\s+/).pop().toLowerCase();
+      }
+    }
+    return '';
+  }
 
-  function injectNotifyButton() {
-    var courseKey = getCourseKeyFromUrl();
-    if (!courseKey) return;
-    if (window.location.pathname.indexOf('/authoring/course/') === -1) return;
+  // ─── Check if draft was saved by current user ───
+  function isDraftByCurrentUser() {
+    // Look for "Draft saved on ... by {username}" text in the sidebar
+    var sidebar = document.querySelector('[class*="sidebar"], aside, [class*="publish"]');
+    var allText = document.body.innerText || '';
+    var match = allText.match(/Draft saved on .+? by (\S+)/i);
+    if (!match) return false;
+    var draftAuthor = match[1].toLowerCase();
+    var currentUser = getCurrentUsername();
+    if (!currentUser) return false;
+    return draftAuthor === currentUser;
+  }
 
-    // Check if container still in DOM
-    var existing = document.getElementById('vai-notify-container');
-    if (existing && document.body.contains(existing)) return;
+  // ─── Replace Publish button with "Notify Admin for Review" in sidebar ───
+  function replacePublishButton() {
+    // Find all Publish buttons
+    var buttons = document.querySelectorAll('button');
+    buttons.forEach(function(btn) {
+      var text = btn.textContent.trim();
 
-    // Prevent concurrent API calls while loading
-    if (VAI_NOTIFY_LOADING) return;
-    VAI_NOTIFY_LOADING = true;
+      // Replace Publish button with Notify Admin — only if draft was made by current user
+      if (text === 'Publish') {
+        // Skip if we already replaced this one
+        if (btn.getAttribute('data-vai-replaced') === 'true') return;
 
-    var header = document.querySelector('header');
-    if (!header) return;
-
-    // Create container
-    var container = document.createElement('div');
-    container.id = 'vai-notify-container';
-    container.style.cssText = 'background:#f8f4ff;border-bottom:1px solid #e9d5ff;padding:8px 24px;display:flex;align-items:center;justify-content:flex-end;gap:12px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:40px;';
-
-    // Status text
-    var statusEl = document.createElement('span');
-    statusEl.id = 'vai-notify-status';
-    statusEl.style.cssText = 'font-size:13px;color:#6b7280;margin-right:auto;';
-    statusEl.textContent = 'Checking for changes...';
-
-    // Button
-    var btn = document.createElement('button');
-    btn.id = 'vai-notify-btn';
-    btn.textContent = 'Notify Admin for Review';
-    btn.style.cssText = 'background:#490B8A;color:#fff;border:none;border-radius:6px;padding:6px 18px;font-size:13px;font-weight:600;cursor:pointer;display:none;';
-    btn.onmouseenter = function() { if (!btn.disabled) btn.style.background = '#2B0157'; };
-    btn.onmouseleave = function() { if (!btn.disabled) btn.style.background = '#490B8A'; };
-    btn.onclick = function() {
-      btn.disabled = true;
-      btn.textContent = 'Notifying...';
-      btn.style.background = '#7c3aed';
-      cmsFetch('/api/course-approval/notify/' + courseKey + '/', 'POST', function(status, data) {
-        if (status === 200) {
-          btn.textContent = 'Admin Notified \u2713';
-          btn.style.background = '#6b7280';
-          btn.style.cursor = 'default';
-          statusEl.textContent = 'Admin has been notified. They will review and publish your changes.';
-          statusEl.style.color = '#059669';
-        } else {
-          btn.textContent = 'Error — Try Again';
-          btn.style.background = '#dc2626';
-          btn.disabled = false;
+        // If draft is NOT by current user, just hide the Publish button (don't show Notify)
+        if (!isDraftByCurrentUser()) {
+          btn.style.display = 'none';
+          return;
         }
-      });
-    };
 
-    container.appendChild(statusEl);
-    container.appendChild(btn);
-    header.parentNode.insertBefore(container, header.nextSibling);
+        var courseKey = getCourseKeyFromUrl();
+        if (!courseKey) return;
 
-    // Check for changes
-    loadNotifyState(courseKey, statusEl, btn, function() {
-      VAI_NOTIFY_LOADING = false;
+        // Create replacement button
+        var notifyBtn = document.createElement('button');
+        notifyBtn.textContent = 'Notify Admin for Review';
+        notifyBtn.setAttribute('data-vai-replaced', 'true');
+        // Match the original Publish button style: outlined, full-width, same padding/radius
+        notifyBtn.className = btn.className;
+        notifyBtn.style.cssText = 'width:100%;padding:7px 12px;background:transparent;color:rgb(10,48,85);border:1px solid rgb(10,48,85);border-radius:4px;font-size:14px;font-weight:400;cursor:pointer;transition:all 0.2s;box-sizing:border-box;';
+        notifyBtn.onmouseenter = function() { if (!notifyBtn.disabled) { notifyBtn.style.background = 'rgb(10,48,85)'; notifyBtn.style.color = '#fff'; } };
+        notifyBtn.onmouseleave = function() { if (!notifyBtn.disabled) { notifyBtn.style.background = 'transparent'; notifyBtn.style.color = 'rgb(10,48,85)'; } };
+
+        notifyBtn.onclick = function() {
+          notifyBtn.disabled = true;
+          notifyBtn.textContent = 'Notifying...';
+          notifyBtn.style.background = 'rgb(10,48,85)';
+          notifyBtn.style.color = '#fff';
+          notifyBtn.style.cursor = 'wait';
+
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', getCmsBaseUrl() + '/api/course-approval/notify/' + courseKey + '/', true);
+          xhr.withCredentials = true;
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                notifyBtn.textContent = 'Admin Notified \u2713';
+                notifyBtn.style.background = '#059669';
+                notifyBtn.style.borderColor = '#059669';
+                notifyBtn.style.color = '#fff';
+                notifyBtn.style.cursor = 'default';
+              } else {
+                notifyBtn.textContent = 'Error \u2014 Try Again';
+                notifyBtn.style.background = 'transparent';
+                notifyBtn.style.borderColor = '#dc2626';
+                notifyBtn.style.color = '#dc2626';
+                notifyBtn.disabled = false;
+                notifyBtn.style.cursor = 'pointer';
+              }
+            }
+          };
+          xhr.onerror = function() {
+            notifyBtn.textContent = 'Error \u2014 Try Again';
+            notifyBtn.style.background = 'transparent';
+            notifyBtn.style.borderColor = '#dc2626';
+            notifyBtn.style.color = '#dc2626';
+            notifyBtn.disabled = false;
+            notifyBtn.style.cursor = 'pointer';
+          };
+          xhr.send(JSON.stringify({}));
+        };
+
+        // Replace the Publish button
+        btn.parentNode.replaceChild(notifyBtn, btn);
+      }
+
+      // Hide Discard changes
+      if (text === 'Discard changes') {
+        btn.style.display = 'none';
+      }
+    });
+
+    // Also hide "Discard changes" links (sometimes rendered as <a> not <button>)
+    document.querySelectorAll('a').forEach(function(link) {
+      if (link.textContent.trim() === 'Discard changes') {
+        link.style.display = 'none';
+      }
+    });
+
+    // Hide Publish options inside three-dot dropdown menus on the outline page
+    document.querySelectorAll('[role="menu"] button, [role="menuitem"]').forEach(function(item) {
+      var itemText = item.textContent.trim();
+      if (itemText === 'Publish') {
+        item.style.display = 'none';
+      }
     });
   }
 
-  function loadNotifyState(courseKey, statusEl, btn, onDone) {
-    cmsFetch('/api/course-approval/has-changes/' + courseKey + '/', 'GET', function(status, data) {
-      if (onDone) onDone();
-      if (status !== 200) {
-        statusEl.textContent = '';
-        btn.style.display = 'none';
-        return;
-      }
-
-      if (data.has_unpublished_changes && !data.notification_active) {
-        // Has changes, not yet notified → show active button
-        statusEl.textContent = 'You have unpublished changes.';
-        statusEl.style.color = '#92400e';
-        btn.style.display = 'inline-block';
-        btn.disabled = false;
-        btn.textContent = 'Notify Admin for Review';
-        btn.style.background = '#490B8A';
-        btn.style.cursor = 'pointer';
-      } else if (data.has_unpublished_changes && data.notification_active) {
-        // Has changes, already notified → show disabled button
-        statusEl.textContent = 'Admin has been notified. They will review and publish your changes.';
-        statusEl.style.color = '#059669';
-        btn.style.display = 'inline-block';
-        btn.disabled = true;
-        btn.textContent = 'Admin Notified \u2713';
-        btn.style.background = '#6b7280';
-        btn.style.cursor = 'default';
-      } else {
-        // No changes → hide everything
-        statusEl.textContent = '';
-        btn.style.display = 'none';
-      }
-    });
+  // ─── Remove old top banner if it exists from previous version ───
+  function removeOldBanner() {
+    var old = document.getElementById('vai-notify-container');
+    if (old) old.remove();
   }
 
   // ─── Main Logic ───
@@ -205,9 +220,10 @@
 
     checkIfAdmin(function(isAdmin) {
       if (isAdmin) return;
-      hideRestrictedElements();
+      hideRestrictedMenuItems();
       showBlockedBanner();
-      injectNotifyButton();
+      removeOldBanner();
+      replacePublishButton();
     });
   }
 
