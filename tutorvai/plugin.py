@@ -165,6 +165,18 @@ MKTG_URLS = {"ROOT": "{{ VAI_MARKETING_SITE_URL }}"}
     )
 )
 
+# Discourse forum reverse proxy
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "caddyfile",
+        """
+community.lms.bytecrew.net {
+    reverse_proxy 172.17.0.1:8080
+}
+""",
+    )
+)
+
 # Allow MFEs to load Garet fonts from LMS (cross-origin)
 hooks.Filters.ENV_PATCHES.add_item(
     (
