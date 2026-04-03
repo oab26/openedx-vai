@@ -297,6 +297,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 MFE_CONFIG["LOGO_URL"] = "https://{{ LMS_HOST }}/static/vai/images/logo.svg"
 MFE_CONFIG["LOGO_TRADEMARK_URL"] = "https://{{ LMS_HOST }}/static/vai/images/logo.svg"
 MFE_CONFIG["LOGO_WHITE_URL"] = "https://{{ LMS_HOST }}/static/vai/images/logo-white.svg"
+MFE_CONFIG["LOGOUT_URL"] = "{{ VAI_MARKETING_SITE_URL }}/api/auth/openedx/logout"
 """,
     )
 )
