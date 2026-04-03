@@ -165,6 +165,31 @@ MKTG_URLS = {"ROOT": "{{ VAI_MARKETING_SITE_URL }}"}
     )
 )
 
+# Logout: redirect to marketing site and clear vai-user cookie there
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+LOGOUT_REDIRECT_URL = "{{ VAI_MARKETING_SITE_URL }}/api/auth/openedx/logout?from_lms=1"
+""",
+    )
+)
+
+# Redirect LMS homepage to marketing site (unauthenticated users)
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+# Redirect unauthenticated users from LMS homepage to marketing site
+FEATURES["ENABLE_MKTG_SITE"] = True
+# Disable LMS course discovery — users should browse on marketing site
+FEATURES["ENABLE_COURSE_DISCOVERY"] = False
+COURSE_CATALOG_VISIBILITY_PERMISSION = "see_exists"
+SEARCH_SKIP_ENROLLMENT_START_DATE_FILTERING = False
+""",
+    )
+)
+
 # Discourse forum reverse proxy
 hooks.Filters.ENV_PATCHES.add_item(
     (
