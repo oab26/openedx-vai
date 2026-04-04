@@ -199,7 +199,7 @@ community.lms.bytecrew.net {
     reverse_proxy 172.17.0.1:8080
 }
 sync.lms.bytecrew.net {
-    reverse_proxy 127.0.0.1:8765
+    reverse_proxy 172.17.0.1:8765
 }
 """,
     )
