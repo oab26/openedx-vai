@@ -313,32 +313,35 @@ MFE_CONFIG["LOGOUT_URL"] = "{{ VAI_MARKETING_SITE_URL }}/api/auth/openedx/logout
 # Each MFE gets: (1) write patch file during install, (2) inject into index.html after build
 
 _vai_mfe_patches = {
-    "learner-dashboard": ("vai-dashboard-css.txt", "style"),
-    "authn": ("vai-authn-script.txt", "script"),
-    "learning": ("vai-learning-script.txt", "script"),
-    "discussions": ("vai-discussions-script.txt", "script"),
-    "authoring": ("vai-authoring-script.txt", "script"),
-    "profile": ("vai-profile-css.txt", "style"),
-    "account": ("vai-account-css.txt", "style"),
+    "learner-dashboard": [("vai-dashboard-css.txt", "style"), ("vai-dashboard-script.txt", "script")],
+    "authn": [("vai-authn-script.txt", "script")],
+    "learning": [("vai-learning-script.txt", "script")],
+    "discussions": [("vai-discussions-script.txt", "script")],
+    "authoring": [("vai-authoring-script.txt", "script")],
+    "profile": [("vai-profile-css.txt", "style")],
+    "account": [("vai-account-css.txt", "style")],
 }
 
-for _mfe_name, (_patch_file, _tag) in _vai_mfe_patches.items():
-    _content = _load_patch(_patch_file)
-    if _content:
-        _b64 = __import__("base64").b64encode(_content.encode()).decode()
-        hooks.Filters.ENV_PATCHES.add_item(
-            (
-                f"mfe-dockerfile-post-npm-install-{_mfe_name}",
-                f"RUN echo '{_b64}' | base64 -d > /openedx/app/vai-inject.txt"
-                " && sed -i 's|__LMS_FONTS_BASE__|{% if ENABLE_HTTPS %}https://{{ LMS_HOST }}{% else %}http://{{ LMS_HOST }}{% endif %}/static/vai/fonts/|g' /openedx/app/vai-inject.txt",
+for _mfe_name, _patches in _vai_mfe_patches.items():
+    for _idx, (_patch_file, _tag) in enumerate(_patches):
+        _content = _load_patch(_patch_file)
+        if _content:
+            _inject_file = f"/openedx/app/vai-inject-{_idx}.txt"
+            _b64 = __import__("base64").b64encode(_content.encode()).decode()
+            hooks.Filters.ENV_PATCHES.add_item(
+                (
+                    f"mfe-dockerfile-post-npm-install-{_mfe_name}",
+                    f"RUN echo '{_b64}' | base64 -d > {_inject_file}"
+                    f" && sed -i 's|__LMS_FONTS_BASE__|{{% if ENABLE_HTTPS %}}https://{{{{ LMS_HOST }}}}{{% else %}}http://{{{{ LMS_HOST }}}}{{% endif %}}/static/vai/fonts/|g' {_inject_file}"
+                    f" && sed -i 's|__VAI_MARKETING_SITE__|{{{{ VAI_MARKETING_SITE_URL }}}}|g' {_inject_file}",
+                )
             )
-        )
-        hooks.Filters.ENV_PATCHES.add_item(
-            (
-                f"mfe-dockerfile-post-npm-build-{_mfe_name}",
-                f"""RUN node -e "var fs=require('fs'),c=fs.readFileSync('/openedx/app/vai-inject.txt','utf8'),h=fs.readFileSync('/openedx/app/dist/index.html','utf8');h=h.replace('</body>','<{_tag}>'+c+'</{_tag}></body>');fs.writeFileSync('/openedx/app/dist/index.html',h);" """,
+            hooks.Filters.ENV_PATCHES.add_item(
+                (
+                    f"mfe-dockerfile-post-npm-build-{_mfe_name}",
+                    f"""RUN node -e "var fs=require('fs'),c=fs.readFileSync('{_inject_file}','utf8'),h=fs.readFileSync('/openedx/app/dist/index.html','utf8');h=h.replace('</body>','<{_tag}>'+c+'</{_tag}></body>');fs.writeFileSync('/openedx/app/dist/index.html',h);" """,
+                )
             )
-        )
 
 
 

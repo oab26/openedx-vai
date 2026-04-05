@@ -1,0 +1,44 @@
+(function() {
+  var MARKETING_SITE = '__VAI_MARKETING_SITE__';
+
+  function rewriteEnrollButtons() {
+    // Target "Enroll Now" buttons/links on the Programs tab
+    var links = document.querySelectorAll('a[href*="/enroll"], a[href*="/register"], button');
+    links.forEach(function(el) {
+      var href = el.getAttribute('href') || '';
+      var text = (el.textContent || '').trim().toLowerCase();
+
+      // Match "Enroll Now" links that point to LMS enrollment
+      if (text === 'enroll now' && href && !href.includes(MARKETING_SITE)) {
+        // Extract course run key from the URL
+        // Common patterns: /courses/course-v1:ORG+NUM+RUN/enroll or /enroll?course_id=course-v1:ORG+NUM+RUN
+        var courseRunKey = null;
+        var match = href.match(/courses\/(course-v1:[^\/]+)/);
+        if (match) {
+          courseRunKey = match[1];
+        } else {
+          match = href.match(/course_id=(course-v1:[^&]+)/);
+          if (match) {
+            courseRunKey = decodeURIComponent(match[1]);
+          }
+        }
+
+        if (courseRunKey) {
+          el.setAttribute('href', MARKETING_SITE + '/api/course-redirect?lmsCourseId=' + encodeURIComponent(courseRunKey));
+          el.setAttribute('target', '_blank');
+          el.setAttribute('rel', 'noopener noreferrer');
+        }
+      }
+    });
+  }
+
+  var observer = new MutationObserver(function() { rewriteEnrollButtons(); });
+  function startObserving() {
+    if (document.body) {
+      observer.observe(document.body, { childList: true, subtree: true });
+      rewriteEnrollButtons();
+    }
+  }
+  if (document.body) startObserving();
+  else document.addEventListener('DOMContentLoaded', startObserving);
+})();
