@@ -93,6 +93,8 @@ hooks.Filters.ENV_PATCHES.add_item(
         """
 DEFAULT_FROM_EMAIL = "VAI - Veterinary Academy International <noreply@updates.bytecrew.net>"
 SERVER_EMAIL = "noreply@updates.bytecrew.net"
+LOGO_URL_PNG = "https://{{ LMS_HOST }}/static/vai/images/logo.png"
+LOGO_URL = "https://{{ LMS_HOST }}/static/vai/images/logo.svg"
 """,
     )
 )
