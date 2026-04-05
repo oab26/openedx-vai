@@ -2,33 +2,31 @@
   var MARKETING_SITE = '__VAI_MARKETING_SITE__';
 
   function rewriteEnrollButtons() {
-    // Target "Enroll Now" buttons/links on the Programs tab
-    var links = document.querySelectorAll('a[href*="/enroll"], a[href*="/register"], button');
-    links.forEach(function(el) {
-      var href = el.getAttribute('href') || '';
-      var text = (el.textContent || '').trim().toLowerCase();
+    var buttons = document.querySelectorAll('.enroll-button button.cta-primary');
+    buttons.forEach(function(btn) {
+      if (btn.textContent.trim() !== 'Enroll Now') return;
+      if (btn._vaiReplaced) return;
 
-      // Match "Enroll Now" links that point to LMS enrollment
-      if (text === 'enroll now' && href && !href.includes(MARKETING_SITE)) {
-        // Extract course run key from the URL
-        // Common patterns: /courses/course-v1:ORG+NUM+RUN/enroll or /enroll?course_id=course-v1:ORG+NUM+RUN
-        var courseRunKey = null;
-        var match = href.match(/courses\/(course-v1:[^\/]+)/);
-        if (match) {
-          courseRunKey = match[1];
-        } else {
-          match = href.match(/course_id=(course-v1:[^&]+)/);
-          if (match) {
-            courseRunKey = decodeURIComponent(match[1]);
-          }
-        }
-
-        if (courseRunKey) {
-          el.setAttribute('href', MARKETING_SITE + '/api/course-redirect?lmsCourseId=' + encodeURIComponent(courseRunKey));
-          el.setAttribute('target', '_blank');
-          el.setAttribute('rel', 'noopener noreferrer');
-        }
+      // Walk up to find the course-details container with the h5 title
+      var container = btn;
+      for (var i = 0; i < 6; i++) {
+        container = container.parentElement;
+        if (!container) return;
+        if (container.querySelector('h5')) break;
       }
+      var h5 = container.querySelector('h5');
+      if (!h5) return;
+
+      var title = h5.textContent.trim();
+      var link = document.createElement('a');
+      link.href = MARKETING_SITE + '/api/course-redirect?title=' + encodeURIComponent(title);
+      link.className = btn.className;
+      link.textContent = 'Enroll Now';
+      link.style.cssText = 'display:inline-block;text-align:center;text-decoration:none;color:white;';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link._vaiReplaced = true;
+      btn.parentElement.replaceChild(link, btn);
     });
   }
 
