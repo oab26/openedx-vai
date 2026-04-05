@@ -354,7 +354,7 @@ hooks.Filters.ENV_PATCHES.add_items(
             "openedx-common-assets-settings",
             """
 javascript_files = ['base_application', 'application', 'certificates_wv']
-dark_theme_filepath = ['vai/js/dark-theme.js']
+dark_theme_filepath = ['vai/js/dark-theme.js', 'vai/js/program-enroll-redirect.js']
 
 for filename in javascript_files:
     if filename in PIPELINE['JAVASCRIPT']:
@@ -366,7 +366,7 @@ for filename in javascript_files:
             "openedx-lms-development-settings",
             """
 javascript_files = ['base_application', 'application', 'certificates_wv']
-dark_theme_filepath = ['vai/js/dark-theme.js']
+dark_theme_filepath = ['vai/js/dark-theme.js', 'vai/js/program-enroll-redirect.js']
 
 for filename in javascript_files:
     if filename in PIPELINE['JAVASCRIPT']:
