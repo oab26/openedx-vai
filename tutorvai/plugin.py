@@ -95,6 +95,7 @@ DEFAULT_FROM_EMAIL = "VAI - Veterinary Academy International <noreply@updates.by
 SERVER_EMAIL = "noreply@updates.bytecrew.net"
 LOGO_URL_PNG = "https://{{ LMS_HOST }}/static/vai/images/logo.png"
 LOGO_URL = "https://{{ LMS_HOST }}/static/vai/images/logo.svg"
+FEATURES['PREVENT_CONCURRENT_LOGINS'] = True
 """,
     )
 )
