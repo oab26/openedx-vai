@@ -201,6 +201,9 @@ hooks.Filters.ENV_PATCHES.add_item(
 community.lms.bytecrew.net {
     reverse_proxy 172.17.0.1:8080
 }
+search.lms.bytecrew.net {
+    reverse_proxy 172.17.0.1:8108
+}
 sync.lms.bytecrew.net {
     reverse_proxy 172.17.0.1:8765
 }
