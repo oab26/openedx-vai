@@ -30,6 +30,8 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
             {"title": "Help", "url": "/help"},
             {"title": "Contact Us", "url": "/contact"},
         ],
+        "MCP_AUTH_TOKEN": "",
+        "OPENAI_API_KEY": "",
     },
     "unique": {},
     "overrides": {
@@ -189,6 +191,37 @@ FEATURES["ENABLE_MKTG_SITE"] = True
 FEATURES["ENABLE_COURSE_DISCOVERY"] = False
 COURSE_CATALOG_VISIBILITY_PERMISSION = "see_exists"
 SEARCH_SKIP_ENROLLMENT_START_DATE_FILTERING = False
+""",
+    )
+)
+
+# ─── AI Extensibility Framework (OpenEdX AI Extensions) ───
+# Install the AI extensions backend into the openedx image
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-dockerfile-post-python-requirements",
+        'RUN pip install "git+https://github.com/openedx/openedx-ai-extensions.git#subdirectory=backend"',
+    )
+)
+
+# MCP server config — connects to VAI Chatbot on Railway for textbook/course/article search
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-lms-common-settings",
+        """
+AI_EXTENSIONS_MCP_CONFIGS = {
+    "vai_knowledge": {
+        "require_approval": "never",
+        "server_url": "https://vai-chatbot-backend-production.up.railway.app/mcp/",
+        "authorization": "Bearer {{ VAI_MCP_AUTH_TOKEN }}",
+    }
+}
+AI_EXTENSIONS = {
+    "openai": {
+        "API_KEY": "{{ VAI_OPENAI_API_KEY }}",
+        "MODEL": "openai/gpt-4o-mini",
+    }
+}
 """,
     )
 )
