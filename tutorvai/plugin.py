@@ -31,7 +31,6 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
             {"title": "Contact Us", "url": "/contact"},
         ],
         "MCP_AUTH_TOKEN": "",
-        "OPENAI_API_KEY": "",
     },
     "unique": {},
     "overrides": {
@@ -196,30 +195,15 @@ SEARCH_SKIP_ENROLLMENT_START_DATE_FILTERING = False
 )
 
 # ─── AI Extensibility Framework (OpenEdX AI Extensions) ───
-# The openedx-ai-extensions tutor plugin is DISABLED because its frontend
-# component crashes the Learning MFE (React useContext mismatch).
-# We handle backend-only setup here: pip install, provider config, MCP config.
-# The MFE UI button is not available until the frontend issue is resolved upstream.
+# The openedx-ai-extensions tutor plugin handles: pip install, Dockerfile patches,
+# AI_EXTENSIONS provider config (set in config.yml), and Superset dashboards.
+# We add: (1) MCP server config, (2) React dedup fix for the MFE frontend crash.
 
-# Install the AI extensions backend into the openedx image
-hooks.Filters.ENV_PATCHES.add_item(
-    (
-        "openedx-dockerfile-post-python-requirements",
-        'RUN pip install "git+https://github.com/openedx/openedx-ai-extensions.git#subdirectory=backend"',
-    )
-)
-
-# AI provider config + MCP server config
+# MCP server config — the AI Extensions plugin doesn't know about our Railway chatbot
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-common-settings",
         """
-AI_EXTENSIONS = {
-    "openai": {
-        "API_KEY": "{{ VAI_OPENAI_API_KEY }}",
-        "MODEL": "openai/gpt-4o-mini",
-    }
-}
 AI_EXTENSIONS_MCP_CONFIGS = {
     "vai_knowledge": {
         "require_approval": "never",
@@ -230,6 +214,17 @@ AI_EXTENSIONS_MCP_CONFIGS = {
 """,
     )
 )
+
+# Fix: The AI Extensions plugin's MFE post-npm-install uses --install-links which
+# bundles a duplicate React from devDependencies. This causes useContext(IntlContext)
+# to return null → crash. We override the patch: remove --install-links, add npm dedupe.
+for _ai_mfe in ["learning", "authoring"]:
+    hooks.Filters.ENV_PATCHES.add_item(
+        (
+            f"mfe-dockerfile-post-npm-install-{_ai_mfe}",
+            "RUN npm install --legacy-peer-deps /openedx/ai-extensions-frontend && npm dedupe react react-dom",
+        )
+    )
 
 # Discourse forum reverse proxy
 hooks.Filters.ENV_PATCHES.add_item(
