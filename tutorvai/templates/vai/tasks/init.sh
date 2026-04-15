@@ -71,8 +71,6 @@ try:
     scope, s_created = AIWorkflowScope.objects.get_or_create(
         profile=profile,
         ui_slot_selector_id='ai-assist-button',
-        location_regex='.*',
-        course_id=None,
         defaults={'enabled': True},
     )
     if s_created:
