@@ -31,6 +31,7 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
             {"title": "Contact Us", "url": "/contact"},
         ],
         "MCP_AUTH_TOKEN": "",
+        "OPENAI_API_KEY": "",
     },
     "unique": {},
     "overrides": {
@@ -195,13 +196,30 @@ SEARCH_SKIP_ENROLLMENT_START_DATE_FILTERING = False
 )
 
 # ─── AI Extensibility Framework (OpenEdX AI Extensions) ───
-# The openedx-ai-extensions tutor plugin handles: pip install, Dockerfile patches,
-# MFE patches, and AI_EXTENSIONS provider config (set in config.yml).
-# We only add our custom MCP server config here (the plugin doesn't know about it).
+# The openedx-ai-extensions tutor plugin is DISABLED because its frontend
+# component crashes the Learning MFE (React useContext mismatch).
+# We handle backend-only setup here: pip install, provider config, MCP config.
+# The MFE UI button is not available until the frontend issue is resolved upstream.
+
+# Install the AI extensions backend into the openedx image
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-dockerfile-post-python-requirements",
+        'RUN pip install "git+https://github.com/openedx/openedx-ai-extensions.git#subdirectory=backend"',
+    )
+)
+
+# AI provider config + MCP server config
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-common-settings",
         """
+AI_EXTENSIONS = {
+    "openai": {
+        "API_KEY": "{{ VAI_OPENAI_API_KEY }}",
+        "MODEL": "openai/gpt-4o-mini",
+    }
+}
 AI_EXTENSIONS_MCP_CONFIGS = {
     "vai_knowledge": {
         "require_approval": "never",
