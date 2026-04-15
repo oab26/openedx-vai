@@ -215,14 +215,18 @@ AI_EXTENSIONS_MCP_CONFIGS = {
     )
 )
 
-# Fix: The AI Extensions plugin's MFE post-npm-install uses --install-links which
-# bundles a duplicate React from devDependencies. This causes useContext(IntlContext)
-# to return null → crash. We override the patch: remove --install-links, add npm dedupe.
+# Fix: The AI Extensions plugin's post-npm-install runs in the common stage,
+# but COPY --from=learning-src / /openedx/app later overwrites node_modules.
+# The package is missing at build time → dynamic import fails silently.
+# Fix: Add a post-npm-build patch that re-installs + rebuilds the MFE.
+# This runs in the prod stage AFTER the source copy, ensuring the package is present.
 for _ai_mfe in ["learning", "authoring"]:
     hooks.Filters.ENV_PATCHES.add_item(
         (
-            f"mfe-dockerfile-post-npm-install-{_ai_mfe}",
-            "RUN npm install --legacy-peer-deps /openedx/ai-extensions-frontend && npm dedupe react react-dom",
+            f"mfe-dockerfile-post-npm-build-{_ai_mfe}",
+            "RUN npm install --legacy-peer-deps /openedx/ai-extensions-frontend"
+            " && npm dedupe react react-dom"
+            " && npm run build",
         )
     )
 
