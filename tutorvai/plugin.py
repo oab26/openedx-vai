@@ -218,17 +218,16 @@ AI_EXTENSIONS_MCP_CONFIGS = {
 # Fix: The AI Extensions plugin's post-npm-install runs in the common stage,
 # but COPY --from=learning-src / /openedx/app later overwrites node_modules.
 # The package is missing at build time → dynamic import fails silently.
-# Fix: Add a post-npm-build patch that re-installs + rebuilds the MFE.
-# This runs in the prod stage AFTER the source copy, ensuring the package is present.
-for _ai_mfe in ["learning", "authoring"]:
-    hooks.Filters.ENV_PATCHES.add_item(
-        (
-            f"mfe-dockerfile-post-npm-build-{_ai_mfe}",
-            "RUN npm install --legacy-peer-deps /openedx/ai-extensions-frontend"
-            " && npm dedupe react react-dom"
-            " && npm run build",
-        )
+# Fix: Add a post-npm-build patch that re-installs the package + rebuilds.
+# Only for learning MFE (authoring has dependency issues in prod mode).
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "mfe-dockerfile-post-npm-build-learning",
+        "RUN npm install --legacy-peer-deps /openedx/ai-extensions-frontend"
+        " && npm dedupe react react-dom"
+        " && NODE_ENV=production npm run build",
     )
+)
 
 # Discourse forum reverse proxy
 hooks.Filters.ENV_PATCHES.add_item(
