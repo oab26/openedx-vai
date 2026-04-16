@@ -195,11 +195,9 @@ SEARCH_SKIP_ENROLLMENT_START_DATE_FILTERING = False
 )
 
 # ─── AI Extensibility Framework (OpenEdX AI Extensions) ───
-# The openedx-ai-extensions tutor plugin handles: pip install, Dockerfile patches,
-# AI_EXTENSIONS provider config (set in config.yml), and Superset dashboards.
-# We add: (1) MCP server config, (2) React dedup fix for the MFE frontend crash.
-
-# MCP server config — the AI Extensions plugin doesn't know about our Railway chatbot
+# The openedx-ai-extensions tutor plugin handles everything: pip install,
+# Dockerfile patches, MFE plugin slots, and AI_EXTENSIONS provider config.
+# We only add our custom MCP server config (for VAI knowledge search on Railway).
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-common-settings",
@@ -212,20 +210,6 @@ AI_EXTENSIONS_MCP_CONFIGS = {
     }
 }
 """,
-    )
-)
-
-# Fix: The AI Extensions plugin's post-npm-install runs in the common stage,
-# but COPY --from=learning-src / /openedx/app later overwrites node_modules.
-# The package is missing at build time → dynamic import fails silently.
-# Fix: Add a post-npm-build patch that re-installs the package + rebuilds.
-# Only for learning MFE (authoring has dependency issues in prod mode).
-hooks.Filters.ENV_PATCHES.add_item(
-    (
-        "mfe-dockerfile-post-npm-build-learning",
-        "RUN npm install --legacy-peer-deps /openedx/ai-extensions-frontend"
-        " && npm dedupe react react-dom"
-        " && NODE_ENV=production npm run build",
     )
 )
 
