@@ -31,6 +31,7 @@ config: t.Dict[str, t.Dict[str, t.Any]] = {
             {"title": "Contact Us", "url": "/contact"},
         ],
         "MCP_AUTH_TOKEN": "",
+        "OPENAI_API_KEY": "",
     },
     "unique": {},
     "overrides": {
@@ -195,13 +196,29 @@ SEARCH_SKIP_ENROLLMENT_START_DATE_FILTERING = False
 )
 
 # ─── AI Extensibility Framework (OpenEdX AI Extensions) ───
-# The openedx-ai-extensions tutor plugin handles everything: pip install,
-# Dockerfile patches, MFE plugin slots, and AI_EXTENSIONS provider config.
-# We only add our custom MCP server config (for VAI knowledge search on Railway).
+# The openedx-ai-extensions tutor plugin is DISABLED (upstream bug: its frontend
+# component crashes the Learning MFE with duplicate React). We handle backend
+# setup here and inject a custom "Ask AI" button via JS injection.
+
+# Install the AI extensions backend into the openedx image
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "openedx-dockerfile-post-python-requirements",
+        'RUN pip install "git+https://github.com/openedx/openedx-ai-extensions.git#subdirectory=backend"',
+    )
+)
+
+# AI provider config + MCP server config
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "openedx-lms-common-settings",
         """
+AI_EXTENSIONS = {
+    "openai": {
+        "API_KEY": "{{ VAI_OPENAI_API_KEY }}",
+        "MODEL": "openai/gpt-4o-mini",
+    }
+}
 AI_EXTENSIONS_MCP_CONFIGS = {
     "vai_knowledge": {
         "require_approval": "never",
@@ -338,7 +355,7 @@ MFE_CONFIG["LOGOUT_URL"] = "{{ VAI_MARKETING_SITE_URL }}/api/auth/openedx/logout
 _vai_mfe_patches = {
     "learner-dashboard": [("vai-dashboard-css.txt", "style"), ("vai-dashboard-script.txt", "script")],
     "authn": [("vai-authn-script.txt", "script")],
-    "learning": [("vai-learning-script.txt", "script")],
+    "learning": [("vai-learning-script.txt", "script"), ("vai-learning-ai-button.txt", "script")],
     "discussions": [("vai-discussions-script.txt", "script")],
     "authoring": [("vai-authoring-script.txt", "script")],
     "profile": [("vai-profile-css.txt", "style")],
