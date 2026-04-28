@@ -29,9 +29,21 @@
     return getUnitId();
   }
 
-  function getCsrfToken() {
-    var m = document.cookie.match(/csrftoken=([^;]+)/);
-    return m ? m[1] : '';
+  // Fetch CSRF token from LMS (cookies aren't accessible cross-subdomain from MFE)
+  var _csrfTokenCache = null;
+  async function getCsrfToken() {
+    if (_csrfTokenCache) return _csrfTokenCache;
+    try {
+      var resp = await fetch(LMS_BASE + '/csrf/api/v1/token', {
+        credentials: 'include',
+      });
+      if (resp.ok) {
+        var data = await resp.json();
+        _csrfTokenCache = data.csrfToken || '';
+        return _csrfTokenCache;
+      }
+    } catch (e) { /* ignore */ }
+    return '';
   }
 
   // --- Inject CSS ---
@@ -158,12 +170,14 @@
     });
 
     try {
+      var csrfToken = await getCsrfToken();
       var url = API_BASE + '/workflows/?context=' + encodeURIComponent(context);
       var response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCsrfToken(),
+          'X-CSRFToken': csrfToken,
+          'USE-JWT-COOKIE': 'true',
         },
         credentials: 'include',
         body: JSON.stringify({
